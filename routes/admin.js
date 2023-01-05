@@ -26,7 +26,7 @@ router.get('/admin/:username', (req, res) => {
     var FacultyDateRegister = ''
     var FacultyDateRegisters = ''
 
-    const teachervehicle = "Select vehicledescription as vdescript, count(*) as vdescount from parkingsystem.teacher_faculty_reg where status = 'Accept' Group by vehicledescription"
+    const teachervehicle = "Select vehicledescription as vdescript, count(*) as vdescount from teacher_faculty_reg where status = 'Accept' Group by vehicledescription"
     database.query(teachervehicle,(error,results)=>{
         if(error)
             console.log(error)
@@ -34,7 +34,7 @@ router.get('/admin/:username', (req, res) => {
             FacultyDateRegisters = results
     })
 
-    const teacher = 'Select YEAR(dateregister) as peryear,count(*) as countperyear from parkingsystem.teacher_faculty_reg where status = "Accept" Group by YEAR(dateregister) ORDER BY YEAR(dateregister) DESC limit 5; '
+    const teacher = 'Select YEAR(dateregister) as peryear,count(*) as countperyear from teacher_faculty_reg where status = "Accept" Group by YEAR(dateregister) ORDER BY YEAR(dateregister) DESC limit 5; '
     database.query(teacher,(err,result)=>{
         if(err)
             console.log(err)
@@ -59,7 +59,7 @@ router.get('/admin/:username', (req, res) => {
         }
     })
     var visitorcounts = ''
-    const visitorcount="Select COUNT(idvisitorslog) AS users from parkingsystem.visitorslog where status = 'In'"
+    const visitorcount="Select COUNT(idvisitorslog) AS users from visitorslog where status = 'In'"
     database.query(visitorcount,(err,rset)=>{
         if(err)
             console.log(err)
@@ -74,7 +74,7 @@ router.get('/admin/:username', (req, res) => {
             resultfor4wheels  = rsets
         }
     })
-    const sqlvdescript = "Select vehicletable_descript as vdescript,count(*) as vdescount from parkingsystem.vehicletable where status = 'Accept' Group by vehicletable_descript"
+    const sqlvdescript = "Select vehicletable_descript as vdescript,count(*) as vdescount from vehicletable where status = 'Accept' Group by vehicletable_descript"
     const queryvdescript = database.query(sqlvdescript,(err,rsets)=>{
         if(err)
             console.log(err)
@@ -82,7 +82,7 @@ router.get('/admin/:username', (req, res) => {
             sqlvdescripttion = rsets
         }
     })
-    const sqlformortorcyleusers = "Select COUNT(username) AS users from parkingsystem.vehicletable where vehicletable_descript = 'Motorcyle' AND LogsInOut ='In' AND status = 'Accept'"
+    const sqlformortorcyleusers = "Select COUNT(username) AS users from vehicletable where vehicletable_descript = 'Motorcyle' AND LogsInOut ='In' AND status = 'Accept'"
     const queryformortorcyleusers = database.query(sqlformortorcyleusers,(err,rsets)=>{
         if(err)
             console.log(err)
@@ -135,7 +135,7 @@ router.get('/admin/:username', (req, res) => {
             ResultsTeacherfor4wheelresults = rsets
         }
     })
-    const sqlyear = "Select YEAR(dateregister) as peryear,count(*) as countperyear from parkingsystem.vehicletable where status = 'Accept' Group by YEAR(dateregister) ORDER BY YEAR(dateregister) DESC limit 5;"
+    const sqlyear = "Select YEAR(dateregister) as peryear,count(*) as countperyear from vehicletable where status = 'Accept' Group by YEAR(dateregister) ORDER BY YEAR(dateregister) DESC limit 5;"
     const queryyear = database.query(sqlyear,(err,rsets)=>{
         if(err)
             console.log(err)

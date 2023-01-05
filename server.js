@@ -64,14 +64,14 @@ app.get('/teacherlogin', (req, res) => {
 app.get('/visitorslog/:username', function (req, res) {
   const user = req.params.username
   var reset = ''
-  const users = 'SELECT * FROM parkingsystem.visitorslog;'
+  const users = 'SELECT * FROM visitorslog;'
   database.query(users,(err,reset)=>{
     if(err)
       console.log(err)
     else
       rset = reset
   })
-  const Sql = "select * from parkingsystem.user_account_info where Username = ?"
+  const Sql = "select * from user_account_info where Username = ?"
   const Query = database.query(Sql,user,(err,rset)=>{
     if(err){
       console.log(err)
@@ -111,7 +111,7 @@ app.post('/loginbuttonforteacher', function (req, res) {
   const username = req.body.loginPassword
   const password = req.body.loginPassword
   const status = 'Pending'
-  const sql = "Select * from parkingsystem.teacher_faculty_reg where Username = ?"
+  const sql = "Select * from teacher_faculty_reg where Username = ?"
   database.query(sql,password,(error,results)=>{
     if(error)
       console.log(error)
@@ -121,7 +121,7 @@ app.post('/loginbuttonforteacher', function (req, res) {
         res.redirect('/teacherlogin')
       }else{
 
-          const rawstatus = 'SELECT status from parkingsystem.teacher_faculty_reg where username = ?'
+          const rawstatus = 'SELECT status from teacher_faculty_reg where username = ?'
           database.query(rawstatus,username,async (err,rset)=>{
             if(err)
               console.log(err)
@@ -150,7 +150,7 @@ app.post('/loginbuttonforteacher', function (req, res) {
 })
 app.get('/teacherupdatesheet/:username',function (req,res){
   const username = req.params.username
-  const select = "SELECT * FROM parkingsystem.teacher_faculty_reg where Username = ?"
+  const select = "SELECT * FROM teacher_faculty_reg where Username = ?"
   database.query(select,username,(err,rset)=>{
     if(err)
       console.log(err)
@@ -186,7 +186,7 @@ app.post('/updatefacultyreg', function (req, res) {
 /*Post Here*/
 app.post('/validateusername', function (req, res) {
   const username = req.body.registration_username
-  const sql = "SELECT Username FROM parkingsystem.user_account where Username = ?"
+  const sql = "SELECT Username FROM user_account where Username = ?"
   const query = database.query(sql,username,(err,rset)=>{
     if(err){
       console.log(err)
@@ -206,7 +206,7 @@ app.post('/validateusername', function (req, res) {
 })
 app.post('/validate-username', function (req, res){
   const username = req.body.vehicleregistration_username
-  const sql = "SELECT username FROM parkingsystem.vehicletable where Username = ?"
+  const sql = "SELECT username FROM vehicletable where Username = ?"
   const query = database.query(sql,username,(err,rset)=>{
     if(err){
       console.log(err)
@@ -270,7 +270,7 @@ app.post('/carregister', async (req, res) => {
 
 app.post('/faculty-username', function (req, res) {
   const username = req.body.registration_username
-  const sql = "Select Username from parkingsystem.teacher_faculty_reg where Username = ?"
+  const sql = "Select Username from teacher_faculty_reg where Username = ?"
   const query = database.query(sql,username,(err,rset)=>{
     if(err){
       console.log(err)
@@ -378,7 +378,7 @@ app.post('/signin', function (req, res) {
   const username = req.body.login_username
   const password = req.body.login_password
   const statusaccept = "Accept"
-  const sql = "SELECT * FROM parkingsystem.user_account where Username = ?"
+  const sql = "SELECT * FROM user_account where Username = ?"
   const query = database.query(sql,username, async(err,rset)=>{
     if(err){
       console.log(err)
@@ -388,7 +388,7 @@ app.post('/signin', function (req, res) {
       }else{
         const passwordcompare = await bcrypt.compare(password,rset[0].password)
         if (passwordcompare){
-          const sqlforstatus = "select statusaccept from parkingsystem.user_account_info where Username = ?"
+          const sqlforstatus = "select statusaccept from user_account_info where Username = ?"
           const queryforstatus = database.query(sqlforstatus,username,(err,rsetforsqlforstatus)=>{
             if(err){
               console.log(err)
@@ -414,7 +414,7 @@ app.post('/signin', function (req, res) {
 app.post('/delete/:id/:username', (req, res) => {
   const id = req.params.id
   const username = req.params.username
-  const sql = "Delete FROM parkingsystem.vehicletable where id = ?;"
+  const sql = "Delete FROM vehicletable where id = ?;"
   const query = database.query(sql,[id],(err,rset)=>{
     if(err)
       console.log(err)
@@ -466,7 +466,7 @@ app.post('/teacherout/:id/:adminusername/:idparkingslots/:vdesc', function (req,
   const joineddate = year+"-"+addmonth+"-"+days 
 
   const logsInOut = "Out"
-  const outverifyier ='SELECT InOutLogs from parkingsystem.teacher_faculty_reg where regisrationid = ?;'
+  const outverifyier ='SELECT InOutLogs from teacher_faculty_reg where regisrationid = ?;'
   database.query(outverifyier,id,(errorou,resultin)=>{
     if(errorou)
       console.log(errorou)
@@ -477,12 +477,12 @@ app.post('/teacherout/:id/:adminusername/:idparkingslots/:vdesc', function (req,
           req.flash('plateno')
           res.redirect("/teacherfacultylogs/"+admin+"/"+vdesc)
       }else{
-          const sqlselectuser = 'SELECT * FROM parkingsystem.teacher_faculty_reg where regisrationid = ?;'
+          const sqlselectuser = 'SELECT * FROM teacher_faculty_reg where regisrationid = ?;'
           database.query(sqlselectuser,id,(error,result)=>{
             if(error)
               console.log(error)
             else{
-              const sql = "update parkingsystem.teacher_faculty_reg set  Logstimeout = ' ' , InOutLogs = ? ,Logsdate=? where regisrationid = ?"
+              const sql = "update teacher_faculty_reg set  Logstimeout = ' ' , InOutLogs = ? ,Logsdate=? where regisrationid = ?"
               const query = database.query(sql,[logsInOut,joineddate,id],(err,rset)=>{
                 if(err)
                   console.log(err)
@@ -501,12 +501,12 @@ app.post('/teacherout/:id/:adminusername/:idparkingslots/:vdesc', function (req,
                     pslots:result[0].pslots
                   }
 
-                  const insertsql = 'insert into parkingsystem.parkedarchiveteacher set ?'
+                  const insertsql = 'insert into parkedarchiveteacher set ?'
                   database.query(insertsql,archivedata,(errsql,rsetsql)=>{
                     if(errsql)
                       console.log(errsql)
                     else
-                      database.query(`update parkingsystem.parkingslots set useroccupied ='',status='Out' where idparkingslots = ?`,idparkingslots,(e,r)=>{
+                      database.query(`update parkingslots set useroccupied ='',status='Out' where idparkingslots = ?`,idparkingslots,(e,r)=>{
                         if(e)
                           console.log(e)
                         else
@@ -555,16 +555,16 @@ app.get('/teacherin/:regisrationid/:username/:vehicledescription/:plateno/:parki
                       console.log(err)
                     else
                       if(rset[0].Parked != 0){
-                        database.query(`SELECT pakingnumber,idparkingslots FROM parkingsystem.parkingslots  where idparkingslots = ?;`,parkingslot,(error1,result1)=>{
+                        database.query(`SELECT pakingnumber,idparkingslots FROM parkingslots  where idparkingslots = ?;`,parkingslot,(error1,result1)=>{
                           if(error1)
                             console.log(error1)
                           else
-                            database.query(`update parkingsystem.teacher_faculty_reg set pslots= ? ,idparkingslots = ? , Logstime = ? , InOutLogs = ?, Logsdate = ? where regisrationid = ? `
+                            database.query(`update teacher_faculty_reg set pslots= ? ,idparkingslots = ? , Logstime = ? , InOutLogs = ?, Logsdate = ? where regisrationid = ? `
                             ,[result1[0].pakingnumber,result1[0].idparkingslots,logs,logsInOut,joineddate,id],(error2,result2)=>{
                               if(error1)
                                 console.log(error2)
                               else
-                                database.query(`update parkingsystem.parkingslots set useroccupied = ?, status = 'In' where idparkingslots = ?`,[platenumber,parkingslot],(error3,result3)=>{
+                                database.query(`update parkingslots set useroccupied = ?, status = 'In' where idparkingslots = ?`,[platenumber,parkingslot],(error3,result3)=>{
                                   if(error3)
                                     console.log(error3)
                                   else
@@ -585,16 +585,16 @@ app.get('/teacherin/:regisrationid/:username/:vehicledescription/:plateno/:parki
         console.log(err)
       else
         if(rset[0].Parked != 0){
-          database.query(`SELECT pakingnumber,idparkingslots FROM parkingsystem.parkingslots  where idparkingslots = ?;`,parkingslot,(error1,result1)=>{
+          database.query(`SELECT pakingnumber,idparkingslots FROM parkingslots  where idparkingslots = ?;`,parkingslot,(error1,result1)=>{
             if(error1)
               console.log(error1)
             else
-              database.query(`update parkingsystem.teacher_faculty_reg set pslots= ? ,idparkingslots = ? , Logstime = ? , InOutLogs = ?, Logsdate = ? where regisrationid = ? `
+              database.query(`update teacher_faculty_reg set pslots= ? ,idparkingslots = ? , Logstime = ? , InOutLogs = ?, Logsdate = ? where regisrationid = ? `
               ,[result1[0].pakingnumber,result1[0].idparkingslots,logs,logsInOut,joineddate,id],(error2,result2)=>{
                 if(error1)
                   console.log(error2)
                 else
-                  database.query(`update parkingsystem.parkingslots set useroccupied = ?, status = 'In' where idparkingslots = ?`,[platenumber,parkingslot],(error3,result3)=>{
+                  database.query(`update parkingslots set useroccupied = ?, status = 'In' where idparkingslots = ?`,[platenumber,parkingslot],(error3,result3)=>{
                     if(error3)
                       console.log(error3)
                     else
@@ -670,7 +670,7 @@ app.post('/updatestudent', function (req, res) {
   const username = req.body.UpdateStudentUsername
   const password = req.body.UpdateStudentPassword
   const status = "Accept"
-  const sql = "Select * from parkingsystem.vehicletable where username = ?"
+  const sql = "Select * from vehicletable where username = ?"
   const query = database.query(sql,username, async (err,rset)=>{
     if(err)
       console.log(err)
@@ -678,7 +678,7 @@ app.post('/updatestudent', function (req, res) {
       if(rset.length==0){
         res.redirect('/studentlogin')
       }else{
-        const sqlvalidation = 'SELECT status from parkingsystem.vehicletable where username = ?;'
+        const sqlvalidation = 'SELECT status from vehicletable where username = ?;'
         database.query(sqlvalidation,username, async (errr,rsets)=>{
           if (err)
             console.log(errr)
@@ -766,7 +766,7 @@ app.post('/updateparkingspace/:username/:parkingid', function (req, res) {
   const username = req.params.username
   const parkingid = req.params.parkingid
   const pakingquantity = req.body.space
-  const sql = "Update parkingsystem.pakingspace set space = ? where ParkingId = ?"
+  const sql = "Update pakingspace set space = ? where ParkingId = ?"
   const query = database.query(sql,[pakingquantity,parkingid],(err,rset)=>{
     if(err)
       console.log(err)
@@ -792,7 +792,7 @@ app.post('/insertvisitors/:admin', function (req, res) {
   minutes = minutes < 10 ? '0' + minutes : minutes;
   const logs = hours + ':' + minutes + ' ' + newformat
 
-  database.query(`SELECT pakingnumber FROM parkingsystem.parkingslots where idparkingslots = ?;`,req.body.parkingspace,(err,resultss)=>{
+  database.query(`SELECT pakingnumber FROM parkingslots where idparkingslots = ?;`,req.body.parkingspace,(err,resultss)=>{
     if(err)
       console.log(err)
     else{
@@ -814,13 +814,13 @@ app.post('/insertvisitors/:admin', function (req, res) {
         platenumber:req.body.visitorspnumber
       }
     
-      const sql = "insert into parkingsystem.visitorslog set ?"
+      const sql = "insert into visitorslog set ?"
       database.query(sql,dataforaccountinfo,(err,rset)=>{
         if(err)
           console.log(err)
         else
 
-          database.query(`update parkingsystem.parkingslots set  useroccupied = ? , status = 'In' where idparkingslots = ?`,[req.body.visitorspnumber,req.body.parkingspace],(error,result)=>{
+          database.query(`update parkingslots set  useroccupied = ? , status = 'In' where idparkingslots = ?`,[req.body.visitorspnumber,req.body.parkingspace],(error,result)=>{
             if(error)
               console.log(error)
             else
@@ -935,12 +935,12 @@ app.get('/in/:studentid/:adminusername/:vehicledescriptiom/:plateno/:parkingslot
             console.log(err)
           else{
             if(rsetss[0].Motor > 0){
-              const find = 'SELECT * FROM parkingsystem.vehicletable where id = ?;'
+              const find = 'SELECT * FROM vehicletable where id = ?;'
               database.query(find,id,(err,rsetfind)=>{
                 if (err)
                   console.log(err)
                 else{
-                  database.query(`update parkingsystem.parkingslots set  useroccupied = ? , status = 'In' where idparkingslots = ?`,
+                  database.query(`update parkingslots set  useroccupied = ? , status = 'In' where idparkingslots = ?`,
                   [pnumber,slot],(error,resultss)=>{
                     if(error)
                       console.log(error)
@@ -986,12 +986,12 @@ app.get('/in/:studentid/:adminusername/:vehicledescriptiom/:plateno/:parkingslot
             console.log(err)
           else{
             if(rsetss[0].fourwheel > 0){
-              const find = 'SELECT * FROM parkingsystem.vehicletable where id = ?;'
+              const find = 'SELECT * FROM vehicletable where id = ?;'
               database.query(find,id,(err,rsetfind)=>{
                 if (err)
                   console.log(err)
                 else{
-                  database.query(`update parkingsystem.parkingslots set  useroccupied = ? , status = 'In' where idparkingslots = ?`,
+                  database.query(`update parkingslots set  useroccupied = ? , status = 'In' where idparkingslots = ?`,
                   [pnumber,slot],(error,resultss)=>{
                     if(error)
                       console.log(error)
@@ -1054,7 +1054,7 @@ app.post('/out/:studentid/:adminusername/:vdes/:idparkingslot', function (req, r
   const addmonth = month + 1
   const joineddate = year+"-"+addmonth+"-"+days 
   const outverifyier = 'Out'
-  const sqlouts = 'SELECT LogsInOut FROM parkingsystem.vehicletable where id = ?;'
+  const sqlouts = 'SELECT LogsInOut FROM vehicletable where id = ?;'
   database.query(sqlouts,id,(errorout,resultin)=>{
     if(errorout)
       console.log(errorout)
@@ -1063,17 +1063,17 @@ app.post('/out/:studentid/:adminusername/:vdes/:idparkingslot', function (req, r
         req.flash('Needtoout',"alreadylogout")
         res.redirect("/invehicle/"+admin+"/"+vdesc)
       }else{
-          const sqlselectstudent = 'SELECT * FROM parkingsystem.vehicletable where id = ? ;'
+          const sqlselectstudent = 'SELECT * FROM vehicletable where id = ? ;'
             database.query(sqlselectstudent,id,(err,rsets)=>{
               if(err)
                 console.log(err)
               else{
-                const sql = "update parkingsystem.vehicletable set timeout = ? , LogsInOut = 'Out' ,logsdate = ? where id = ?"
+                const sql = "update vehicletable set timeout = ? , LogsInOut = 'Out' ,logsdate = ? where id = ?"
                 database.query(sql,[logs,joineddate,id],(err,rset)=>{
                   if(err)
                     console.log(err)
                   else{
-                    database.query(`update parkingsystem.parkingslots set useroccupied = '' , status = 'Out' where idparkingslots = ?`,idparkingslot,(error,result)=>{
+                    database.query(`update parkingslots set useroccupied = '' , status = 'Out' where idparkingslots = ?`,idparkingslot,(error,result)=>{
                       if (error)
                         console.log(error)
                       else{
@@ -1094,7 +1094,7 @@ app.post('/out/:studentid/:adminusername/:vdes/:idparkingslot', function (req, r
                           if(err)
                             console.log(err)
                           else{
-                            database.query(`update parkingsystem.vehicletable set parkingslot = ''where id = ?`,id,(errupdate,resultupdate)=>{
+                            database.query(`update vehicletable set parkingslot = ''where id = ?`,id,(errupdate,resultupdate)=>{
                               if (errupdate){
                                 console.log(errupdate)
                               }else{
@@ -1122,7 +1122,7 @@ app.get('/editfaculty/:id/:username', function (req, res) {
   const id = req.params.id
   const username = req.params.username
   var status = "Accept"
-  const sql = 'Update parkingsystem.teacher_faculty_reg set status = ? where  Username = ?;'
+  const sql = 'Update teacher_faculty_reg set status = ? where  Username = ?;'
   let query = database.query(sql, [status,id], (err,rset)=>{
       if(err)
           console.log(err)
@@ -1138,7 +1138,7 @@ app.get('/pendinguserteacher/:id/:username', function (req, res) {
   const id = req.params.id
   const username = req.params.username
   var status = "Pending"
-  const sql = 'Update parkingsystem.teacher_faculty_reg set status = ? where  Username = ?;'
+  const sql = 'Update teacher_faculty_reg set status = ? where  Username = ?;'
   let query = database.query(sql, [status,id], (err,rset)=>{
       if(err)
           console.log(err)
@@ -1154,7 +1154,7 @@ app.get('/reset/:id/:username', async (req, res) => {
   const id = req.params.id
   const username = req.params.username
   const password = await bcrypt.hash("123456789",10)
-  const sql = 'Update parkingsystem.teacher_faculty_reg set password = ? where Username = ?'
+  const sql = 'Update teacher_faculty_reg set password = ? where Username = ?'
   database.query(sql,[password,id],(err,rset)=>{
     if(err)
           console.log(err)
@@ -1169,7 +1169,7 @@ app.get('/reset/:id/:username', async (req, res) => {
 app.get('/deletefaculty/:id/:username', function (req, res) {
   const id = req.params.id
   const username =req.params.username
-  const sql = "Delete from parkingsystem.teacher_faculty_reg where Username = ?;"
+  const sql = "Delete from teacher_faculty_reg where Username = ?;"
   const query = database.query(sql,[id],(err,rset)=>{
     if(err)
       console.log(err)
@@ -1205,7 +1205,7 @@ app.get('/deleteadmin/:username/:adminusername', (req, res) => {
 app.get('/aproveadmin/:username/:adminusername', (req, res) => {
   const username = req.params.username
   const adminusername = req.params.adminusername
-  const sql = "Update parkingsystem.user_account_info set statusaccept = 'Accept' where  Username = ?;"
+  const sql = "Update user_account_info set statusaccept = 'Accept' where  Username = ?;"
   database.query(sql,username,(err,rset)=>{
     if (err)
       console.log(err)
@@ -1221,7 +1221,7 @@ app.get('/aproveadmin/:username/:adminusername', (req, res) => {
 app.get('/pendingadmin/:username/:adminusername', (req, res) => {
   const username = req.params.username
   const adminusername = req.params.adminusername
-  const sql = "Update parkingsystem.user_account_info set statusaccept = 'Pending' where  Username = ?;"
+  const sql = "Update user_account_info set statusaccept = 'Pending' where  Username = ?;"
   database.query(sql,username,(err,rset)=>{
     if (err)
       console.log(err)
@@ -1254,7 +1254,7 @@ app.get('/resetpass/:username/:adminusername', async (req, res) => {
 app.get('/adminsuper/:username/:adminusername', async (req, res) => {
   const id = req.params.username
   const username = req.params.adminusername 
-  const sql = 'Update parkingsystem.user_account_info set status = "SuperAdmin" where Username = ?'
+  const sql = 'Update user_account_info set status = "SuperAdmin" where Username = ?'
   database.query(sql,id,(err,rset)=>{
     if(err)
           console.log(err)
@@ -1270,12 +1270,12 @@ app.get('/adminsuper/:username/:adminusername', async (req, res) => {
 
 app.get('/faculty/:user', (req, res) => {
   const user = req.params.user
-  const Sql = "select * from parkingsystem.user_account_info where Username = ?"
+  const Sql = "select * from user_account_info where Username = ?"
   const Query = database.query(Sql,user,(erruser,rsetuser)=>{
     if(erruser)
       console.log(erruser)
     else{
-      const sql = "SELECT * FROM parkingsystem.teacher_faculty_reg"
+      const sql = "SELECT * FROM teacher_faculty_reg"
       const query = database.query(sql,(err,rset)=>{
         if(!req.session.usersignin){
           res.redirect("/")
@@ -1311,12 +1311,12 @@ app.get('/faculty/:user', (req, res) => {
 })
 app.get('/parkingspace/:user', (req, res) => {
   const user = req.params.user
-  const Sql = "select * from parkingsystem.user_account_info where Username = ?"
+  const Sql = "select * from user_account_info where Username = ?"
   const Query = database.query(Sql,user,(erruser,rsetuser)=>{
     if(erruser)
       console.log(erruser)
     else{
-      const sql ="SELECT * FROM parkingsystem.pakingspace;"
+      const sql ="SELECT * FROM pakingspace;"
       const query = database.query(sql,(err,rset)=>{
         if(err)
           console.log(err)
@@ -1352,12 +1352,12 @@ app.get('/parkingspace/:user', (req, res) => {
 })
 app.get('/approve/:user', (req, res) => {
   const user = req.params.user
-  const Sql = "select * from parkingsystem.user_account_info where Username = ?"
+  const Sql = "select * from user_account_info where Username = ?"
   const Query = database.query(Sql,user,(erruser,rsetuser)=>{
     if(erruser)
       console.log(erruser)
     else{
-      const sql = "SELECT * FROM parkingsystem.vehicletable;"
+      const sql = "SELECT * FROM vehicletable;"
       const query = database.query(sql,(err,rset)=>{
         if(!req.session.usersignin){
           res.redirect("/")
@@ -1396,7 +1396,7 @@ app.get('/approve/:user', (req, res) => {
 })
 app.get('/Archive/:adminusername', (req, res) => {
   const admin = req.params.adminusername
-  const adminquery = "select * from parkingsystem.user_account_info where Username = ?"
+  const adminquery = "select * from user_account_info where Username = ?"
   database.query(adminquery,admin,(err,rsetuser)=>{
     if(err)
       console.log(err)
@@ -1441,12 +1441,12 @@ app.get('/Archive/:adminusername', (req, res) => {
 })
 app.get('/adminarchive/:adminusername', (req, res) => {
   const admin = req.params.adminusername
-  const adminquery = "select * from parkingsystem.user_account_info where Username = ?"
+  const adminquery = "select * from user_account_info where Username = ?"
   database.query(adminquery,admin,(err,rsetuser)=>{
     if(err)
       console.log(err)
     else{
-      const rawdata = "SELECT * FROM parkingsystem.parkedarchiveteacher order by archiveid desc;"
+      const rawdata = "SELECT * FROM parkedarchiveteacher order by archiveid desc;"
     database.query(rawdata,(err,rset)=>{
       if(!req.session.usersignin){
         res.redirect("/")
@@ -1491,24 +1491,24 @@ app.get('/teacherfacultylogs/:user/:vdes', (req, res) => {
 
   var vehicleresults = ''
 
-  database.query(`SELECT * FROM parkingsystem.parkingslots where status = 'Out' and users = 'TeacherStaff' and Description = ? `,vehicle,(errors,results)=>{
+  database.query(`SELECT * FROM parkingslots where status = 'Out' and users = 'TeacherStaff' and Description = ? `,vehicle,(errors,results)=>{
     if (errors)
       console.log(errors)
     else
       vehicleresults = results
   })
-  database.query(`SELECT * FROM parkingsystem.parkingslots where status = 'Out' and users = 'TeacherStaff' and Description = ? `,vehicle,(errors,results)=>{
+  database.query(`SELECT * FROM parkingslots where status = 'Out' and users = 'TeacherStaff' and Description = ? `,vehicle,(errors,results)=>{
     if (errors)
       console.log(errors)
     else
       vehicleresults = results
   })
-  const Sql = "select * from parkingsystem.user_account_info where Username = ?"
+  const Sql = "select * from user_account_info where Username = ?"
   const Query = database.query(Sql,user,(erruser,rsetuser)=>{
     if(erruser)
       console.log(erruser)
     else{
-      const sql = "SELECT * FROM parkingsystem.teacher_faculty_reg where vehicledescription = ? and status = 'Accept'"
+      const sql = "SELECT * FROM teacher_faculty_reg where vehicledescription = ? and status = 'Accept'"
       const query = database.query(sql,vehicle,(err,rset)=>{
         if(!req.session.usersignin){
           res.redirect("/")
@@ -1568,12 +1568,12 @@ app.post('/deletevlog/:vid/:adminuser/:idpslots', function (req, res) {
   const addmonth = month + 1
   const joineddate = year+"-"+addmonth+"-"+days 
 
-  const sql = "update parkingsystem.visitorslog set status = 'Out',tout = ? where idvisitorslog = ? ;"
+  const sql = "update visitorslog set status = 'Out',tout = ? where idvisitorslog = ? ;"
   database.query(sql,[logs,vid],(err,rset)=>{
     if(err)
       console.log(err)
     else
-      database.query(`update parkingsystem.parkingslots set status = 'Out',useroccupied = "" where idparkingslots = ?`,idpslots,(error,result)=>{
+      database.query(`update parkingslots set status = 'Out',useroccupied = "" where idparkingslots = ?`,idpslots,(error,result)=>{
         if(error)
           console.log(error)
         else
@@ -1585,7 +1585,7 @@ app.post('/deletevlog/:vid/:adminuser/:idpslots', function (req, res) {
 app.get('/visitors/:admin', (req, res) => {
   const user = req.params.admin
   var parkingspacevisitors = ''
-  database.query(`SELECT * FROM parkingsystem.parkingslots where description = 'Motorcyle' and status = 'Out' and users = 'Visitors';`,(err,result)=>{
+  database.query(`SELECT * FROM parkingslots where description = 'Motorcyle' and status = 'Out' and users = 'Visitors';`,(err,result)=>{
     if(err)
       console.log(err)
     else
@@ -1598,7 +1598,7 @@ app.get('/visitors/:admin', (req, res) => {
     else
       countvisitorsin = result
   })
-  const Sql = "select * from parkingsystem.user_account_info where Username = ?"
+  const Sql = "select * from user_account_info where Username = ?"
   const Query = database.query(Sql,user,(err,rset)=>{
     if(err){
       console.log(err)
@@ -1650,7 +1650,7 @@ app.get('/logout', function (req, res) {
 
 app.get('/adminedit/:username', (req, res) => {
   const username = req.params.username
-  const sql = "SELECT * FROM parkingsystem.user_account INNER JOIN parkingsystem.user_account_info ON user_account.Username = user_account_info.Username where user_account.Username = ?;"
+  const sql = "SELECT * FROM user_account INNER JOIN user_account_info ON user_account.Username = user_account_info.Username where user_account.Username = ?;"
   const query = database.query(sql,username,(err,rset)=>{
     if(err)
       console.log(err)
@@ -1691,7 +1691,7 @@ app.get('/invehicle/:username/:vdes', (req, res) => {
   var parkingslotsresults = ''
   var number = ''
 
-  database.query(`SELECT * FROM parkingsystem.parkingslots where status = 'Out' and users = 'Student' and Description = 'Motorcyle'`,(err,result)=>{
+  database.query(`SELECT * FROM parkingslots where status = 'Out' and users = 'Student' and Description = 'Motorcyle'`,(err,result)=>{
     if(err)
       console.log(err)
     else
@@ -1709,12 +1709,12 @@ app.get('/invehicle/:username/:vdes', (req, res) => {
     else
       number = rset
   })
-  const Sql = "select * from parkingsystem.user_account_info where Username = ?"
+  const Sql = "select * from user_account_info where Username = ?"
   const Query = database.query(Sql,user,(erruser,rsetuser)=>{
     if(erruser)
       console.log(erruser)
     else{
-      const sql = "SELECT * FROM parkingsystem.vehicletable where status = 'Accept' and vehicletable_descript = ? "
+      const sql = "SELECT * FROM vehicletable where status = 'Accept' and vehicletable_descript = ? "
       const query = database.query(sql,vdes,(err,rset)=>{
         if(!req.session.usersignin){
           res.redirect("/")
@@ -1762,12 +1762,12 @@ app.get('/invehicle/:username/:vdes', (req, res) => {
 
 app.get('/adminlist/:admin', (req, res) => {
   const user = req.params.admin
-  const Sql = "select * from parkingsystem.user_account_info where Username = ?"
+  const Sql = "select * from user_account_info where Username = ?"
   const Query = database.query(Sql,user,(erruser,rsetuser)=>{
     if(erruser)
       console.log(erruser)
     else{
-      const sql = "select * from parkingsystem.user_account_info"
+      const sql = "select * from user_account_info"
       const query = database.query(sql,(err,rset)=>{
         if(!req.session.usersignin){
           res.redirect("/")
@@ -1811,7 +1811,7 @@ app.get('/thermal', (req, res) => {
 app.post('/changepassadmin/:username', async (req, res) => {
   const username = req.params.username
   const password = await bcrypt.hash(req.body.adminchangepassword,10)
-  const sql = "update parkingsystem.visitorslog set tout = 'Out' where idvisitorslog = ? ;"
+  const sql = "update visitorslog set tout = 'Out' where idvisitorslog = ? ;"
   const query =database.query(sql,[password,username],(err,rset)=>{
       if(err)
       console.log(err)
@@ -1847,18 +1847,18 @@ app.get('/parking/:admin/:vehicle/:users', (req, res) => {
   const admin = req.params.admin
   const vehicle = req.params.vehicle
   const users = req.params.users
-  const adminquery = "select * from parkingsystem.user_account_info where Username = ?"
+  const adminquery = "select * from user_account_info where Username = ?"
   database.query(adminquery,admin,(err,rsetuser)=>{
     if(err)
       console.log(err)
     else{
-      database.query(`SELECT description FROM parkingsystem.parkingslots where  description = ? and users = ? ;`,[vehicle,users],(errdes,result)=>{
+      database.query(`SELECT description FROM parkingslots where  description = ? and users = ? ;`,[vehicle,users],(errdes,result)=>{
         if(errdes)
           console.log(errdes)
         else
           console.log(result)
           if(result == ""){
-            database.query(`SELECT * FROM parkingsystem.parkingslots where description = ? and users = ?;`,[vehicle,users],(errs,rsets)=>{
+            database.query(`SELECT * FROM parkingslots where description = ? and users = ?;`,[vehicle,users],(errs,rsets)=>{
               if (errs){
                 console.log("eto error ko")
                 console.log(errs)
@@ -1891,7 +1891,7 @@ app.get('/parking/:admin/:vehicle/:users', (req, res) => {
               }
             })
           }else{
-            database.query(`SELECT * FROM parkingsystem.parkingslots where description = ? and users = ?;`,[vehicle,users],(errs,rsets)=>{
+            database.query(`SELECT * FROM parkingslots where description = ? and users = ?;`,[vehicle,users],(errs,rsets)=>{
               if (errs){
                 console.log("eto error ko")
                 console.log(errs)

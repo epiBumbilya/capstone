@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="stylefolder/index.css">
+    <title>Step 1 | Account</title>
+</head>
+<body>
+    <section class="vh-100">
+        <div class="account-sheet container py-5 h-100">
+          <div class="row justify-content-center align-items-center h-100">
+            <div class="col-12 col-lg-9 col-xl-7">
+              <div class="shadow card shadow-2-strong card-registration" style="border-radius: 15px;">
+                <div class="card-body p-4 p-md-5">
+                  <div class="container-fluid">
+                      <h4 class="mb-4 pb-2 pb-md-0 mb-md-5 text-center">
+                        <img class="img-info-sheet-mmsu" src="/img/mmsuLogo.png" alt="">
+                        Account Registration Sheet
+                        <img class="img-info-sheet-cit" src="/img/cit_logo.png" alt="">
+                      </h4>
+                      <h4>Step 1:</h4>
+                      <p>This step is to validate your Username for Account</p>
+                  </div>
+                  <form method="post">
+                    <div class="row">
+                      <div class="col-md-6 mb-4">
+                        <div class="form-outline">
+                          <label class="form-label" for="firstName">Username</label>
+                          <input  type="text" name="registration_username" id="firstName" class="form-control form-control-lg" required/>
+                          <p class="mt-1 text-danger">
+                            <%= invalidusername%>
+                          </p>
+                          <button class="btn btn-success" formaction="/validateusername">Check Username</button>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    
+</body>
+</html>

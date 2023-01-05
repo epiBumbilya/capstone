@@ -1,0 +1,62 @@
+*{
+    padding: 0;
+    margin: 0;  
+
+}
+
+body{
+    padding-top: 20px;
+    background-color: #e8e2e2;
+}
+@media only screen and (max-width:800px) {
+    body {
+        padding-top: 5px;
+    }
+}
+a{
+    text-decoration: none;
+}
+/*Login In ejs*/
+.content-login{
+    padding-top: 50px;
+}
+.login-content{
+    padding-top: 70px;
+}
+/*End Here*/
+
+/*Registration Ejs*/
+.card-registration .select-input.form-control[readonly]:not([disabled]) {
+    font-size: 1rem;
+    line-height: 2.15;
+    padding-left: .75em;
+    padding-right: .75em;
+}
+.card-registration .select-arrow {
+    top: 13px;
+}
+/*End Here*/
+.img-info-sheet-mmsu{
+    height: 90px;
+    width: auto;
+  }
+  .img-info-sheet-cit{
+    height: 75px;
+    width: auto;
+  }
+  @media(max-width: 480px) {
+    .login-content{
+        padding-top: 0px;
+    }
+    .login-content-h h1{
+        padding-top: 0px;
+        font-size: 20px;
+    }
+    .login-content-h h3{
+        font-size: 13px;
+    }
+    .login-content-h h5{
+        font-size: 10px;
+    }
+  }
+  

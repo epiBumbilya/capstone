@@ -1,0 +1,1147 @@
+const express =require('express')
+const bcrypt = require('bcrypt')
+const res = require('express/lib/response')
+const { status, json } = require('express/lib/response')
+const path = require('path')
+const app = express()
+const database = require('./connectionDb/connectionDB');
+const multer = require("multer")
+const session = require("express-session")
+const flash = require("connect-flash")
+const cookie = require("cookie-parser")
+
+const puppeteer = require('puppeteer');
+const fs = require('fs');
+
+const port = process.env.PORT || 3000
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine','ejs')
+app.use(express.urlencoded({extended: true}))
+app.use(express.json())
+app.use(express.static("Public"))
+
+app.use(cookie('SecretStringForCookies'));
+app.use(session({
+    secret: "SecretStingForSession",
+    cookie: {maxAge : 1000 * 60 * 60 * 24},
+    resave: true,
+    saveUninitialized: true
+}))
+app.use(flash());
+
+var sessionsignin = ""
+
+const loginRoutes = require('./routes/login')
+  app.use("/",loginRoutes)
+
+const RegistrationVehicleVehicle = require('./routes/registervehicle')
+  app.use("/registration",RegistrationVehicleVehicle)
+
+const RegistrationAccount = require ('./routes/registrationaccount')
+  app.use("/",RegistrationAccount)
+
+const accountvalidator = require ("./routes/uservalidator")
+  app.use("/accountvalidator",accountvalidator)
+
+const admin = require ("./routes/admin")
+  app.use("/",admin)
+const carregistration = require("./routes/registervehicle")
+  app.use("/Studentregistrationsheet",carregistration)
+const facultyteacherreg = require("./routes/facultyteacherreg")
+  app.use("/teacherfacultyregistrationsheet",facultyteacherreg)
+const { localsName } = require('ejs')
+const { query } = require('./connectionDb/connectionDB')
+const { Console } = require('console')
+/*Post Here*/
+app.post('/validateusername', function (req, res) {
+  const username = req.body.registration_username
+  const sql = "SELECT Username FROM parkingsystem.user_account where Username = ?"
+  const query = database.query(sql,username,(err,rset)=>{
+    if(err){
+      console.log(err)
+    }
+    else{
+      console.log(rset)
+      
+      if(rset == ""){
+        req.session.user = username
+        res.redirect('/accountregistration/'+username)
+      }else if (rset != null){
+        req.flash('invalidusername',"Username is taken")
+        res.redirect("/accountvalidator")
+      }
+    }
+  })
+})
+app.post('/validate-username', function (req, res){
+  const username = req.body.vehicleregistration_username
+  const sql = "SELECT username FROM parkingsystem.vehicletable where Username = ?"
+  const query = database.query(sql,username,(err,rset)=>{
+    if(err){
+      console.log(err)
+    }
+    else{
+      console.log(rset)
+      if(rset == ""){
+        req.session.vehicleregistration = username
+        req.flash('granted', req.session.vehicleregistration)
+        res.redirect('/Studentregistrationsheet')
+      }else if (rset != null){
+        req.flash('invalidusername',"Username is taken")
+        res.redirect('/Studentregistrationsheet')
+      }
+    }
+  })
+})
+app.post('/carregister', async (req, res) => {
+  const today = new Date()
+  const day = today.getDate()
+  const month = today.getMonth()
+  const year = today.getFullYear()
+
+  const days = "0"+day
+  const addmonth = month + 1
+
+  const joineddate = year+"-"+addmonth+"-"+days 
+  console.log(joineddate)
+  const hashpassword = await bcrypt.hash(req.body.vehicleregistration_password,10)
+  const data = {
+    username:                   req.body.vehicleregistration_username,
+    password:                   hashpassword,
+    vehicletable_fname:         req.body.vehicleregistration_firstname,
+    vehicletable_mname:         req.body.vehicleregistration_middlename,
+    vehicletable_lname:         req.body.vehicleregistration_lastname,
+    studentid:                  req.body.vehicleregistration_studentid,
+    year:                       req.body.vehicleregistration_year,
+    major:                      req.body.vehicleregistration_major,
+    section:                    req.body.vehicleregistration_section,
+    gender:                     req.body.vehicleregistration_gender,
+    vehicletable_birthdate:     req.body.vehicleregistration_birthdate,
+    vehicletable_descript:      req.body.vehicleregistration_typevehicle,
+    vehicletable_brgy:          req.body.vehicleregistration_barangay,
+    vehicletable_muni:          req.body.vehicleregistration_municipality,
+    vehicletable_prov:          req.body.vehicleregistration_province,
+    vehicletable_cp:            req.body.vehicleregistration_phonenumber,
+    vehicletable_platenumber:   req.body.vehicleregistration_platenumber,
+    dateregister:               joineddate,
+    status:                     "Pending"
+  }
+  const sql = "insert into vehicletable set ?"
+  const query = database.query(sql,data,(err,rset)=>{
+    if(err)
+      console.log(err)
+    else{
+      req.session.vehicleregistrationmessage = "accepted"
+      res.redirect("/Studentregistrationsheet")
+    }
+  })
+})
+
+app.post('/faculty-username', function (req, res) {
+  const username = req.body.registration_username
+  const sql = "Select Username from parkingsystem.teacher_faculty_reg where Username = ?"
+  const query = database.query(sql,username,(err,rset)=>{
+    if(err){
+      console.log(err)
+    }else{
+      console.log(rset)
+      if(rset == ""){
+        req.session.faculty_username = username
+        req.flash('facultyvalid',req.session.faculty_username)
+        res.redirect("/teacherfacultyregistrationsheet")
+      }else if (rset != null){
+        req.flash('facultyinvalid','Username is taken')
+        res.redirect("/teacherfacultyregistrationsheet")
+      }
+    }
+  })
+})
+
+app.post('/teacher-faculty-reg', async (req, res) => {
+  const today = new Date()
+  const day = today.getDate()
+  const month = today.getMonth()
+  const year = today.getFullYear()
+  const days = "0"+day
+  const addmonth = month + 1
+  const joineddate = year+"-"+addmonth+"-"+days 
+  const hashpassword = await bcrypt.hash(req.body.registration_password,10)
+  const data = {
+    Username:                   req.body.registration_username,
+    password:                   hashpassword,
+    fname:                      req.body.registration_firstname,
+    mname:                      req.body.registration_middlename,
+    lname:                      req.body.registration_lastname,
+    gender:                     req.body.registration_gender,
+    birthdate:                  req.body.registration_birthdate,
+    vehicledescription:         req.body.registration_typevehicle,
+    barangay:                   req.body.registration_barangay,
+    municipality:               req.body.registration_municipality,
+    province:                   req.body.registration_province,
+    contact:                    req.body.registration_phonenumber,
+    platenumber:                req.body.registration_platenumber,
+    usertypes:                   req.body.teacherfaculty,
+    dateregister:               joineddate,
+    status:                     "Pending"
+  }
+  const sql = "insert into teacher_faculty_reg set ?"
+  const query = database.query(sql,data,(err,rset)=>{
+    if(err)
+      console.log(err)
+    else
+      req.session.facultymessage = "accepted"
+      res.redirect("/teacherfacultyregistrationsheet")
+  })
+
+
+})
+app.post('/signup', async (req, res)=> {
+  const hashpassword = await bcrypt.hash(req.body.registration_password,10)
+  console.log(hashpassword)
+  const Username = req.body.registration_username
+  console.log("Username "+Username)
+  var resultforsqlforlastrow = ""
+  const data ={
+    Username: req.body.registration_username,
+    password: hashpassword
+  }
+
+  const sql = "insert into user_account set ?"
+  const query = database.query(sql,data,(err,rset)=>{
+    if(err){
+      console.log(err)
+    }else{
+      const dataforaccountinfo ={
+        /*accountinfo*/
+        Username:               Username,
+        user_account_fname:     req.body.registration_firstname,
+        user_account_lname:     req.body.registration_lastname,
+        user_account_mname:     req.body.registration_middlename,
+        birthdate:              req.body.registration_birthdate,
+        gender:                 req.body.registration_gender,
+        barangay:               req.body.registration_barangay,
+        city:                   req.body.registration_municipality,
+        province:               req.body.registration_province,
+        contact_number:         req.body.registration_phonenumber,
+        contact_email:          req.body.registration_email,   
+        status:                 "semi-admin",
+        statusaccept:           "Pending"
+      }
+      const sqlforaccountinfo = "insert into user_account_info set ?"
+      const queryforaccountinfo = database.query(sqlforaccountinfo,dataforaccountinfo,(err,rset)=>{
+        if(err){
+          console.log(err)
+        }else{
+          delete req.session.user
+          const sweetalertsuccess = 'Successfully Registered'
+          req.flash('sweetalertsuccess',sweetalertsuccess)
+          res.redirect('/')
+        }
+      })
+    }
+  })
+})
+
+app.post('/signin', function (req, res) {
+  const username = req.body.login_username
+  const password = req.body.login_password
+  const statusaccept = "Accept"
+  const sql = "SELECT * FROM parkingsystem.user_account where Username = ?"
+  const query = database.query(sql,username, async(err,rset)=>{
+    if(err){
+      console.log(err)
+    }else{
+      if(rset.length == 0){
+        res.redirect("/")
+      }else{
+        const passwordcompare = await bcrypt.compare(password,rset[0].password)
+        if (passwordcompare){
+          const sqlforstatus = "select statusaccept from parkingsystem.user_account_info where Username = ?"
+          const queryforstatus = database.query(sqlforstatus,username,(err,rsetforsqlforstatus)=>{
+            if(err){
+              console.log(err)
+            }else{
+              if(statusaccept.localeCompare(rsetforsqlforstatus[0].statusaccept) == 0){
+                sessionsignin = req.session.usersignin = username
+                res.redirect("/admin/"+username)
+              }else{
+                res.send("Approval of your account is on process")
+                console.log("wew")
+                console.log(rsetforsqlforstatus)
+              }
+            }
+          })
+        }else{
+          req.flash('value',"Invalid Password")
+          res.redirect("/")
+        }
+      }
+    }
+  })
+
+})
+app.post('/delete/:id/:username', (req, res) => {
+  const id = req.params.id
+  const username = req.params.username
+  const sql = "Delete FROM parkingsystem.vehicletable where id = ?;"
+  const query = database.query(sql,[id],(err,rset)=>{
+    if(err)
+      console.log(err)
+    else{
+      if(!req.session.usersignin){
+        res.redirect("/")
+      }else{
+        res.redirect('/approve/'+username)  
+      } 
+    }
+  })
+})
+
+app.post('/deletefaculty/:id/:username', function (req, res) {
+  const id = req.params.id
+  const username =req.params.username
+  const sql = "Delete from parkingsystem.teacher_faculty_reg where Username = ?;"
+  const query = database.query(sql,[id],(err,rset)=>{
+    if(err)
+      console.log(err)
+    else{
+      if(!req.session.usersignin){
+        res.redirect("/")
+      }else{
+        res.redirect('/faculty/'+username)  
+      }
+    }
+  })
+})
+
+app.post('/edit/:id/:username',(req,res)=>{
+  const id = req.params.id
+  const username = req.params.username
+  var status = "Accept"
+  const sql = 'Update vehicletable set status = ? where  id = ?;'
+  let query = database.query(sql, [status,id], (err,rset)=>{
+      if(err)
+          console.log(err)
+      else
+        if(!req.session.usersignin){
+          res.redirect("/")
+        }else{
+          res.redirect('/approve/'+username)  
+        }   
+  })
+})
+
+app.post('/editfaculty/:id/:username', function (req, res) {
+  const id = req.params.id
+  const username = req.params.username
+  var status = "Accept"
+  const sql = 'Update parkingsystem.teacher_faculty_reg set status = ? where  Username = ?;'
+  let query = database.query(sql, [status,id], (err,rset)=>{
+      if(err)
+          console.log(err)
+      else
+        if(!req.session.usersignin){
+          res.redirect("/")
+        }else{
+          res.redirect('/faculty/'+username)  
+        }   
+  })
+})
+
+app.post('/teacherout/:id/:adminusername', function (req, res) {
+  const id = req.params.id
+  const admin = req.params.adminusername
+  var today = new Date();
+  var hours = today.getHours()
+  var minutes = today.getMinutes()
+  var newformat = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12;
+  hours = hours ? hours : 12;
+  minutes = minutes < 10 ? '0' + minutes : minutes;
+  const logs = hours + ':' + minutes + ' ' + newformat
+
+  const day = today.getDate()
+  const month = today.getMonth()
+  const year = today.getFullYear()
+  const days = "0"+day
+  const addmonth = month + 1
+  const joineddate = year+"-"+addmonth+"-"+days 
+
+  const logsInOut = "Out"
+
+  const sql = "update parkingsystem.teacher_faculty_reg set Logstime= ? , InOutLogs = ? ,Logsdate=? where regisrationid = ?"
+  const query = database.query(sql,[logs,logsInOut,joineddate,id],(err,rset)=>{
+    if(err)
+      console.log(err)
+    else{
+      const sqlvalidation = "Select * from  parkingsystem.teacher_faculty_reg where regisrationid = ?"
+      database.query(sqlvalidation,id,(errr,rsets)=>{
+        req.flash('Needtoout',"SuccesfullyOut")
+        req.flash("platenumber",rsets[0].platenumber)
+        res.redirect("/teacherfacultylogs/"+admin)
+      })
+    }
+  })
+})
+app.post('/in/:studentid/:adminusername/:vehicledescriptiom', function (req, res) {
+  const id = req.params.studentid
+  const admin = req.params.adminusername
+  var typeofvehicle = "" 
+  const vehicledescription = req.params.vehicledescriptiom 
+  var today = new Date();
+  var hours = today.getHours()
+  var minutes = today.getMinutes()
+  const day = today.getDate()
+  const month = today.getMonth()
+  const year = today.getFullYear()
+  const days = "0"+day
+  const addmonth = month + 1
+  const joineddate = year+"-"+addmonth+"-"+days 
+  var newformat = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12;
+  hours = hours ? hours : 12;
+  minutes = minutes < 10 ? '0' + minutes : minutes;
+  const logs = hours + ':' + minutes + ' ' + newformat
+  const logsInOut = "In"
+
+  var countmotorcycle = 1
+  var countspaceforsolomotors = ''
+  var vehicledescriptioms = ""
+    if (vehicledescription == "Motorcyle"){
+        typeofvehicle = 'Student Parking'
+        vehicledescriptioms = req.params.vehicledescriptiom
+    }else if (vehicledescription == "MotorcyleWithSidecar" ){
+        typeofvehicle = 'Student Parking'
+        vehicledescriptioms = 'Motorcyle'
+    }else{
+        typeofvehicle = 'StudentParking4Wheel'
+        vehicledescriptioms = 'Four Wheeled Vehicle'
+    }
+    console.log("wew:"+ vehicledescriptioms)
+  const sqlformortorcyle = "Select COUNT(username) AS users from parkingsystem.vehicletable where vehicletable_descript = ? AND LogsInOut ='In' AND status = 'Accept'"
+  const queryformotorcycle = database.query(sqlformortorcyle,vehicledescriptioms,(err,rset)=>{
+    if(err)
+      console.log(err)
+    else
+      countmotorcycle = rset[0].users + 1
+      console.log()
+      console.log(vehicledescriptioms+" "+ countmotorcycle)
+  })
+
+  const sqlcountspaceforsolomotor = "SELECT space from parkingsystem.pakingspace where nameparking = ?;"
+  database.query(sqlcountspaceforsolomotor,typeofvehicle,(err,rsets)=>{
+    if(err)
+      console.log(err)
+    else
+    countspaceforsolomotors = rsets
+    console.log(countspaceforsolomotors[0].space);
+  })
+
+  const sqlvalidation = "Select LogsInOut,vehicletable_platenumber from vehicletable where id = ?"
+  database.query(sqlvalidation,id,(errr,rsets)=>{
+    if (errr)
+      console.log(errr)
+    else
+    //motors
+    if (vehicledescriptioms == "Motorcyle"){
+      if(countmotorcycle == 0){
+        if(logsInOut.localeCompare(rsets[0].LogsInOut) == 0){
+          req.flash('Needtoout',"Out")
+          req.flash("platenumber",rsets[0].vehicletable_platenumber)
+          res.redirect("/invehicle/"+admin)
+        }else{
+          const sql = "update vehicletable set logs = ? , LogsInOut = ?,logsdate = ? where id = ?"
+          const query = database.query(sql,[logs,logsInOut,joineddate,id],(err,rset)=>{
+            if(err)
+                console.log(err)
+            else
+                req.flash("platenumber",rsets[0].vehicletable_platenumber)
+                req.flash('Needtoout',"Succesfullyin")
+                res.redirect("/invehicle/"+admin)
+                console.log("message1")
+            })
+        }
+      }else if(countmotorcycle == countspaceforsolomotors[0].space){
+          if(logsInOut.localeCompare(rsets[0].LogsInOut) == 0){
+            req.flash('Needtoout',"Out")
+            req.flash("platenumber",rsets[0].vehicletable_platenumber)
+            res.redirect("/invehicle/"+admin)
+          }else{
+            const sql = "update vehicletable set logs = ? , LogsInOut = ?,logsdate = ? where id = ?"
+            const query = database.query(sql,[logs,logsInOut,joineddate,id],(err,rset)=>{
+              if(err)
+                  console.log(err)
+              else
+                  req.flash("platenumber",rsets[0].vehicletable_platenumber)
+                  req.flash('Needtoout',"Succesfullyin")
+                  res.redirect("/invehicle/"+admin)
+                  console.log("message2")
+              })
+          }
+        }else{
+          req.flash('Needtoout',"Full")
+          res.redirect("/invehicle/"+admin)
+          console.log("message3")
+        }
+    }else{
+        //cars
+        if(countmotorcycle <= countspaceforsolomotors[0].space){
+          if(logsInOut.localeCompare(rsets[0].LogsInOut) == 0){
+            req.flash('Needtoout',"Out")
+            req.flash("platenumber",rsets[0].vehicletable_platenumber)
+            res.redirect("/invehicle/"+admin)
+          }else{
+            const sql = "update vehicletable set logs = ? , LogsInOut = ?,logsdate = ? where id = ?"
+            const query = database.query(sql,[logs,logsInOut,joineddate,id],(err,rset)=>{
+              if(err)
+                  console.log(err)
+              else
+                  req.flash("platenumber",rsets[0].vehicletable_platenumber)
+                  req.flash('Needtoout',"Succesfullyin")
+                  res.redirect("/invehicle/"+admin)
+                  console.log("message4")
+              })
+          }
+        }else{
+          req.flash('Needtoout',"Full")
+          res.redirect("/invehicle/"+admin)
+        }
+      }
+  })
+})
+/*InTeacher*/
+app.post('/teacherin/:regisrationid/:username/:vehicledescription', function (req, res) {
+  const id = req.params.regisrationid
+  const admin = req.params.username
+  const vehicledescriptions = req.params.vehicledescription
+
+  var today = new Date();
+  var hours = today.getHours()
+  var minutes = today.getMinutes()
+  const day = today.getDate()
+  const month = today.getMonth()
+  const year = today.getFullYear()
+  const days = "0"+ day
+  const addmonth = month + 1
+  const joineddate = year+"-"+addmonth+"-"+days 
+  var newformat = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12;
+  hours = hours ? hours : 12;
+  minutes = minutes < 10 ? '0' + minutes : minutes;
+  const logs = hours + ':' + minutes + ' ' + newformat
+  const logsInOut = "In"
+  var countmotorcycle = 1
+
+  var countspaceforsolomotors = ''
+  var vehicledescriptioms = ""
+    if (vehicledescription == "Motorcyle"){
+        typeofvehicle = 'Student Parking'
+        vehicledescriptioms = req.params.vehicledescriptiom
+    }else if (vehicledescription == "MotorcyleWithSidecar" ){
+        typeofvehicle = 'Student Parking'
+        vehicledescriptioms = 'Motorcyle'
+    }else{
+        typeofvehicle = 'StudentParking4Wheel'
+        vehicledescriptioms = 'Four Wheeled Vehicle'
+    }
+    console.log("wew:"+ vehicledescriptioms)
+  const sqlformortorcyle = "Select COUNT(Username) AS users from parkingsystem.teacher_faculty_reg where vehicledescription = ? AND InOutLogs ='In' AND status = 'Accept'"
+  const queryformotorcycle = database.query(sqlformortorcyle,vehicledescriptioms,(err,rset)=>{
+    if(err)
+      console.log(err)
+    else
+      countmotorcycle = rset[0].users + 1
+      console.log()
+      console.log(vehicledescriptioms+" "+ countmotorcycle)
+  })
+
+  const sqlcountspaceforsolomotor = "SELECT space from parkingsystem.pakingspace where nameparking = ?;"
+  database.query(sqlcountspaceforsolomotor,typeofvehicle,(err,rsets)=>{
+    if(err)
+      console.log(err)
+    else
+    countspaceforsolomotors = rsets
+    console.log(countspaceforsolomotors[0].space);
+  })
+
+  const sqlvalidation = "Select LogsInOut,vehicletable_platenumber from vehicletable where id = ?"
+  database.query(sqlvalidation,id,(errr,rsets)=>{
+    if (errr)
+      console.log(errr)
+    else
+    //motors
+    if (vehicledescriptioms == "Motorcyle"){
+      if(countmotorcycle == 0){
+        if(logsInOut.localeCompare(rsets[0].LogsInOut) == 0){
+          req.flash('Needtoout',"Out")
+          req.flash("platenumber",rsets[0].vehicletable_platenumber)
+          res.redirect("/invehicle/"+admin)
+        }else{
+          const sql = "update vehicletable set logs = ? , LogsInOut = ?,logsdate = ? where id = ?"
+          const query = database.query(sql,[logs,logsInOut,joineddate,id],(err,rset)=>{
+            if(err)
+                console.log(err)
+            else
+                req.flash("platenumber",rsets[0].vehicletable_platenumber)
+                req.flash('Needtoout',"Succesfullyin")
+                res.redirect("/invehicle/"+admin)
+                console.log("message1")
+            })
+        }
+      }else if(countmotorcycle == countspaceforsolomotors[0].space){
+          if(logsInOut.localeCompare(rsets[0].LogsInOut) == 0){
+            req.flash('Needtoout',"Out")
+            req.flash("platenumber",rsets[0].vehicletable_platenumber)
+            res.redirect("/invehicle/"+admin)
+          }else{
+            const sql = "update vehicletable set logs = ? , LogsInOut = ?,logsdate = ? where id = ?"
+            const query = database.query(sql,[logs,logsInOut,joineddate,id],(err,rset)=>{
+              if(err)
+                  console.log(err)
+              else
+                  req.flash("platenumber",rsets[0].vehicletable_platenumber)
+                  req.flash('Needtoout',"Succesfullyin")
+                  res.redirect("/invehicle/"+admin)
+                  console.log("message2")
+              })
+          }
+        }else{
+          req.flash('Needtoout',"Full")
+          res.redirect("/invehicle/"+admin)
+          console.log("message3")
+        }
+    }else{
+        //cars
+        if(countmotorcycle <= countspaceforsolomotors[0].space){
+          if(logsInOut.localeCompare(rsets[0].LogsInOut) == 0){
+            req.flash('Needtoout',"Out")
+            req.flash("platenumber",rsets[0].vehicletable_platenumber)
+            res.redirect("/invehicle/"+admin)
+          }else{
+            const sql = "update vehicletable set logs = ? , LogsInOut = ?,logsdate = ? where id = ?"
+            const query = database.query(sql,[logs,logsInOut,joineddate,id],(err,rset)=>{
+              if(err)
+                  console.log(err)
+              else
+                  req.flash("platenumber",rsets[0].vehicletable_platenumber)
+                  req.flash('Needtoout',"Succesfullyin")
+                  res.redirect("/invehicle/"+admin)
+                  console.log("message4")
+              })
+          }
+        }else{
+          req.flash('Needtoout',"Full")
+          res.redirect("/invehicle/"+admin)
+        }
+      }
+  })
+})
+/*end*/
+
+app.post('/out/:studentid/:adminusername', function (req, res) {
+  const id = req.params.studentid
+  const admin = req.params.adminusername
+  var today = new Date();
+  var hours = today.getHours()
+  var minutes = today.getMinutes()
+  var newformat = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12;
+  hours = hours ? hours : 12;
+  minutes = minutes < 10 ? '0' + minutes : minutes;
+  const logs = hours + ':' + minutes + ' ' + newformat
+
+  const day = today.getDate()
+  const month = today.getMonth()
+  const year = today.getFullYear()
+  const days = "0"+day
+  const addmonth = month + 1
+  const joineddate = year+"-"+addmonth+"-"+days 
+
+  const logsInOut = "Out"
+
+  const sql = "update vehicletable set logs = ? , LogsInOut = ? ,logsdate = ? where id = ?"
+  const query = database.query(sql,[logs,logsInOut,joineddate,id],(err,rset)=>{
+    if(err)
+      console.log(err)
+    else{
+      const sqlvalidation = "Select vehicletable_platenumber from vehicletable where id = ?"
+      const queryvalidation = database.query(sqlvalidation,id,(errr,rsets)=>{
+        req.flash('Needtoout',"SuccesfullyOut")
+        req.flash("platenumber",rsets[0].vehicletable_platenumber)
+        res.redirect("/invehicle/"+admin)
+      })
+    }
+  })
+})
+app.post('/updatestudent', function (req, res) {
+  const username = req.body.UpdateStudentUsername
+  const password = req.body.UpdateStudentPassword
+  const status = "Accept"
+  const sql = "Select * from parkingsystem.vehicletable where username = ?"
+  const query = database.query(sql,username, async (err,rset)=>{
+    if(err)
+      console.log(err)
+    else
+      if(rset.length==0){
+        req.redirect('/Studentregistrationsheet')
+      }else{
+        const passwordcompare = await bcrypt.compare(password,rset[0].password)
+        if(passwordcompare)
+          if(status.localeCompare(rset[0].status)==0){
+            sessionforstudent = req.session.sessionforstudent= username
+            res.redirect("/updatestudent/"+username)
+          }else{
+            res.send("On the go")
+          }
+      }
+      console.log(rset)
+  })
+})
+app.post('/updatestudentcredentials/:username', function (req, res) {
+  const username = req.params.username
+  const studentid = req.body.updatestudentid
+  const major = req.body.updatemajor
+  const year = req.body.updateyear
+  const section = req.body.updatesection
+  const fname = req.body.updatefirstname
+  const mname = req.body.updatemiddlename
+  const lname = req.body.updatelastname
+  const gender = req.body.updategender
+  const birthdate = req.body.updatebirthdate
+  const typevehicle = req.body.updatetypevehicle
+  const barangay = req.body.updatebarangay
+  const municipality = req.body.updatemunicipality
+  const province = req.body.updateprovince
+  const phonenumber = req.body.updatephonenumber
+  const platenumber = req.body.updateplatenumber
+
+  const sql = "Update vehicletable set studentid = ?, major = ?, year = ? , section = ?, vehicletable_fname = ?, vehicletable_mname = ? ,  vehicletable_lname = ? , gender = ? , vehicletable_birthdate = ?, vehicletable_descript = ?, vehicletable_brgy = ? , vehicletable_muni = ? , vehicletable_prov = ?, vehicletable_cp = ? , vehicletable_platenumber = ? where username = ?"
+  const query = database.query(sql,[studentid,major,year,section,fname,mname,lname,gender,birthdate,typevehicle,barangay,municipality,province,phonenumber,platenumber,username],(err,rset)=>{
+                                if(err)
+                                  console.log(err)
+                                else
+                                  console.log(rset)
+                              })
+})
+app.post('/adminupdate/:username', function (req, res) {
+  const username = req.params.username
+  const fname = req.body.editfirstname
+  const mname = req.body.editmiddlename
+  const lname = req.body.editlastnmae
+  const bday = req.body.editbirthdate
+  const gender = req.body.editgender
+  const brgy = req.body.editbarangay
+  const municipality = req.body.editmunicipality
+  const prov = req.body.editprovince
+  const email = req.body.editemail
+  const contactno= req.body.editcontact
+  const sql = "update user_account_info set user_account_fname = ? , user_account_lname = ? , user_account_mname = ? , birthdate = ? , gender = ? , barangay = ? , city = ? , province = ? , contact_number = ? , contact_email = ? where Username = ?"
+  const query = database.query(sql,[fname,lname,mname,bday,gender,brgy,municipality,prov,contactno,email,username],(err,rset)=>{
+    if(err)
+      console.log(err)
+    else
+      req.flash("successfuly","successfuly")
+      res.redirect('/adminedit/'+username)
+  })
+})
+app.post('/updateparkingspace/:username/:parkingid', function (req, res) {
+  const username = req.params.username
+  const parkingid = req.params.parkingid
+  const pakingquantity = req.body.space
+  const sql = "Update parkingsystem.pakingspace set space = ? where ParkingId = ?"
+  const query = database.query(sql,[pakingquantity,parkingid],(err,rset)=>{
+    if(err)
+      console.log(err)
+    else
+      res.redirect("/parkingspace/"+username)
+  })
+})
+app.post('/insertvisitors/:admin', function (req, res) {
+  const username = req.params.admin
+  const dataforaccountinfo ={
+    fname:req.body.visitorsfirstname,
+    mname:req.body.visitorsmiddlename,
+    lname:req.body.visitorslastnmae,
+    purpose:req.body.visitorspurpose,
+    gender:req.body.visitorsgender,
+    barangay:req.body.visitorsbarangay,
+    city:req.body.visitorsmunicipality,
+    province:req.body.visitorsprovince,
+    contactno:req.body.visitorscontact
+  }
+  const sql = "insert into parkingsystem.visitorslog set ?"
+  database.query(sql,dataforaccountinfo,(err,rset)=>{
+    if(err)
+      console.log(err)
+    else
+      res.send("Inserted")
+  })
+})
+/*End Here*/
+app.get('/faculty/:user', (req, res) => {
+  const user = req.params.user
+  const Sql = "select * from parkingsystem.user_account_info where Username = ?"
+  const Query = database.query(Sql,user,(erruser,rsetuser)=>{
+    if(erruser)
+      console.log(erruser)
+    else{
+      const sql = "SELECT * FROM parkingsystem.teacher_faculty_reg where status = 'Pending'"
+      const query = database.query(sql,(err,rset)=>{
+        if(!req.session.usersignin){
+          res.redirect("/")
+        }else{
+          if(err)
+            console.log(err)
+          else{
+            const statuslevel = 'SuperAdmin'
+            if(statuslevel.localeCompare(rsetuser[0].status) == 0){
+            res.render('Admin_TeacherandFacultyVehicle',{
+              rset,
+              username:rsetuser[0].Username,
+              fname:rsetuser[0].user_account_fname,
+              lname:rsetuser[0].user_account_lname,
+              mname:rsetuser[0].user_account_mname,
+              hidden:""
+            })
+          }else{
+            res.render('Admin_TeacherandFacultyVehicle',{
+              rset,
+              username:rsetuser[0].Username,
+              fname:rsetuser[0].user_account_fname,
+              lname:rsetuser[0].user_account_lname,
+              mname:rsetuser[0].user_account_mname,
+              hidden:"hidden"
+            })
+          }
+          }
+        }  
+      })
+    }
+  })
+})
+app.get('/parkingspace/:user', (req, res) => {
+  const user = req.params.user
+  const Sql = "select * from parkingsystem.user_account_info where Username = ?"
+  const Query = database.query(Sql,user,(erruser,rsetuser)=>{
+    if(erruser)
+      console.log(erruser)
+    else{
+      const sql ="SELECT * FROM parkingsystem.pakingspace;"
+      const query = database.query(sql,(err,rset)=>{
+        if(err)
+          console.log(err)
+        else{
+          if(!req.session.usersignin){
+            res.redirect("/")
+          }else{
+              const statuslevel = 'SuperAdmin'
+              if(statuslevel.localeCompare(rsetuser[0].status) == 0){
+                res.render('Admin_Editparkingspace',{
+                  rset,
+                  username:rsetuser[0].Username,
+                  fname:rsetuser[0].user_account_fname,
+                  lname:rsetuser[0].user_account_lname,
+                  mname:rsetuser[0].user_account_mname,
+                  hidden:""
+                })
+              }else{
+                res.render('Admin_Editparkingspace',{
+                  rset,
+                  username:rsetuser[0].Username,
+                  fname:rsetuser[0].user_account_fname,
+                  lname:rsetuser[0].user_account_lname,
+                  mname:rsetuser[0].user_account_mname,
+                  hidden:"hidden"
+                })
+              }
+          } 
+        }
+      }) 
+    }
+  })
+})
+app.get('/approve/:user', (req, res) => {
+  const user = req.params.user
+  const Sql = "select * from parkingsystem.user_account_info where Username = ?"
+  const Query = database.query(Sql,user,(erruser,rsetuser)=>{
+    if(erruser)
+      console.log(erruser)
+    else{
+      const sql = "SELECT * FROM parkingsystem.vehicletable where status = 'Pending'"
+      const query = database.query(sql,(err,rset)=>{
+        if(!req.session.usersignin){
+          res.redirect("/")
+        }else{
+          if(err)
+            console.log(err)
+          else{
+            const statuslevel = 'SuperAdmin'
+            if(statuslevel.localeCompare(rsetuser[0].status) == 0){
+              res.render('Admin_StudentVehicle',{
+                rset,
+                username:rsetuser[0].Username,
+                fname:rsetuser[0].user_account_fname,
+                lname:rsetuser[0].user_account_lname,
+                mname:rsetuser[0].user_account_mname,
+                hidden:""
+             })
+            }else{
+              res.render('Admin_StudentVehicle',{
+                rset,
+                username:rsetuser[0].Username,
+                fname:rsetuser[0].user_account_fname,
+                lname:rsetuser[0].user_account_lname,
+                mname:rsetuser[0].user_account_mname,
+                hidden:""
+             })
+            }
+          }
+        }  
+  })
+    }
+  })
+})
+
+app.get('/teacherfacultylogs/:user', (req, res) => {
+  const user = req.params.user
+  const Sql = "select * from parkingsystem.user_account_info where Username = ?"
+  const Query = database.query(Sql,user,(erruser,rsetuser)=>{
+    if(erruser)
+      console.log(erruser)
+    else{
+      const sql = "SELECT * FROM parkingsystem.teacher_faculty_reg where status = 'Accept'"
+      const query = database.query(sql,(err,rset)=>{
+        if(!req.session.usersignin){
+          res.redirect("/")
+        }else{
+          if(err)
+            console.log(err)
+          else
+            Needtoout = req.flash("teachermessage")
+            const statuslevel = 'SuperAdmin'
+            if(statuslevel.localeCompare(rsetuser[0].status) == 0){
+              res.render('Admin_teacher_facultylogs',{
+                rset,
+                username:rsetuser[0].Username,
+                fname:rsetuser[0].user_account_fname,
+                lname:rsetuser[0].user_account_lname,
+                mname:rsetuser[0].user_account_mname,
+                alert:Needtoout,
+                hidden:''
+            })
+            }else{
+              res.render('Admin_teacher_facultylogs',{
+                rset,
+                username:rsetuser[0].Username,
+                fname:rsetuser[0].user_account_fname,
+                lname:rsetuser[0].user_account_lname,
+                mname:rsetuser[0].user_account_mname,
+                alert:Needtoout,
+                hidden:'hidden'
+            })
+            }
+        }  
+  })
+    }
+  })
+})
+app.get('/visitors/:admin', (req, res) => {
+  const user = req.params.admin
+  const Sql = "select * from parkingsystem.user_account_info where Username = ?"
+  const Query = database.query(Sql,user,(err,rset)=>{
+    if(err){
+      console.log(err)
+    }else{
+      if(!req.session.usersignin){
+        res.redirect("/")
+    }else{
+      const statuslevel = 'SuperAdmin'
+      if(statuslevel.localeCompare(rset[0].status) == 0){
+        res.render("admin_visitorslogs",{
+          username:rset[0].Username,
+          fname:rset[0].user_account_fname,
+          mname:rset[0].user_account_mname,
+          lname:rset[0].user_account_lname,
+          hidden:""
+        })
+      }else{
+        res.render("admin_visitorslogs",{
+          username:rset[0].Username,
+          fname:rset[0].user_account_fname,
+          mname:rset[0].user_account_mname,
+          lname:rset[0].user_account_lname,
+          hidden:"hidden"
+        })
+      }
+    }
+    }
+  })
+})
+app.get('/logout', function (req, res) {
+  delete req.session.usersignin
+  res.redirect('/')
+})
+app.get('/adminedit/:username', (req, res) => {
+  const username = req.params.username
+  const sql = "SELECT * FROM parkingsystem.user_account INNER JOIN parkingsystem.user_account_info ON user_account.Username = user_account_info.Username where user_account.Username = ?;"
+  const query = database.query(sql,username,(err,rset)=>{
+    if(err)
+      console.log(err)
+    else
+      if(!req.session.usersignin){
+          res.redirect("/")
+      }else{
+        
+        console.log(rset)
+        message = req.flash("successfuly")
+        const statuslevel = 'SuperAdmin'
+        if(statuslevel.localeCompare(rset[0].status) == 0){
+          res.render('Admin_editprofile',{rset,
+            username:username,
+            successfuly:message,
+            hidden:"",
+            fname:rset[0].user_account_fname,
+            mname:rset[0].user_account_mname,
+            lname:rset[0].user_account_lname
+          })
+        }else{
+          res.render('Admin_editprofile',{rset,
+            username:username,
+            successfuly:message,
+            hidden:"hidden",
+            fname:rset[0].user_account_fname,
+            mname:rset[0].user_account_mname,
+            lname:rset[0].user_account_lname
+          })
+        }
+      }
+  })
+})
+app.get('/invehicle/:username', (req, res) => {
+  const user = req.params.username
+  const Sql = "select * from parkingsystem.user_account_info where Username = ?"
+  const Query = database.query(Sql,user,(erruser,rsetuser)=>{
+    if(erruser)
+      console.log(erruser)
+    else{
+      const sql = "SELECT * FROM parkingsystem.vehicletable where status = 'Accept'"
+      const query = database.query(sql,(err,rset)=>{
+        if(!req.session.usersignin){
+          res.redirect("/")
+        }else{
+          if(err)
+            console.log(err)
+          else
+            Needtoout = req.flash("Needtoout")
+            platenumber = req.flash("platenumber")
+            const statuslevel = 'SuperAdmin'
+            if(statuslevel.localeCompare(rset[0].status) == 0){
+              res.render('Admin_StudentLogs',{
+                rset,
+                username:rsetuser[0].Username,
+                fname:rsetuser[0].user_account_fname,
+                lname:rsetuser[0].user_account_lname,
+                mname:rsetuser[0].user_account_mname,
+                sweetalert: Needtoout,
+                platenumber:platenumber,
+                hidden:"hidden"
+              })
+            }else{
+              res.render('Admin_StudentLogs',{
+                rset,
+                username:rsetuser[0].Username,
+                fname:rsetuser[0].user_account_fname,
+                lname:rsetuser[0].user_account_lname,
+                mname:rsetuser[0].user_account_mname,
+                sweetalert: Needtoout,
+                platenumber:platenumber,
+                hidden:""
+              })
+            }
+        }  
+    })
+    }
+  })
+})
+app.get('/thermal', (req, res) => {
+  res.render('printthermal')
+})
+/*Changepass*/
+app.post('/changepassadmin/:username', async (req, res) => {
+  const username = req.params.username
+  const password = await bcrypt.hash(req.body.adminchangepassword,10)
+  const sql = "update user_account set password = ? where Username = ?"
+  const query =database.query(sql,[password,username],(err,rset)=>{
+      if(err)
+      console.log(err)
+      else
+      console.log(rset)
+      res.redirect("/admin/"+username)
+  })
+})
+/*end*/
+app.get('/admincategory', (req, res) => {
+  res.render('adminvehiclecategory')
+})
+
+app.get('/updatestudent/:username', (req, res) => {
+  const username = req.params.username
+  const sql = "select * from vehicletable where username = ?"
+  const query = database.query(sql,username,(err,rset)=>{
+    if(err)
+      console.log(err)
+    else{
+      if (!req.session.sessionforstudent){
+        res.redirect("/Studentregistrationsheet")
+      }else{
+        res.render('studentupdate',{
+          rset
+        })
+      }
+    }
+  })
+})
+/*puppeter*/
+app.get('/wew', (req, res) => {
+  res.render('samplebutton')
+})
+app.post('/Ticket', async (req, res) => {
+    // Create a browser instance
+    const browser = await puppeteer.launch();
+  
+    // Create a new page
+    const page = await browser.newPage();
+  
+    //Get HTML content from ejs file
+    const html = fs.readFileSync('views/sample.ejs', 'utf-8');
+    await page.setContent(html, { waitUntil: 'domcontentloaded' });
+  
+    // To reflect CSS used for screens instead of print
+    await page.emulateMediaType('screen');
+  
+    // Downlaod the PDF
+    const pdf = await page.pdf({
+      path: 'ticket.pdf',
+      margin: { top: '10 px', bottom: '50 px'},
+      printBackground: true,
+      width: '4.8 cm',
+      height: '210 cm' 
+    });
+
+    const path = './ticket.pdf'
+    if (fs.existsSync(path)) {
+        fs.createReadStream(path).pipe(res)
+    } else {
+        res.status(500)
+        console.log('File not found')
+        res.send('File not found')
+    }
+    // Close the browser instance
+    await browser.close();
+})
+/*end*/
+
+app.use((req,res,next)=>{
+  res.status(404).send('Page Not Found')
+})
+app.listen(port, () => console.log(`Example app listening on port ${port}!`))

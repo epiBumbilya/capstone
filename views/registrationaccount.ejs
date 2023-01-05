@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/stylefolder/index.css">
+    <title>Step 2 | Account</title>
+</head>
+<body>
+    <section class="vh-100">
+        <div class="account-sheet container py-5 h-100">
+          <div class="row justify-content-center align-items-center h-100">
+            <div class="col-12 col-lg-9 col-xl-7">
+              <div class="shadow card shadow-2-strong card-registration" style="border-radius: 15px;">
+                <div class="card-body p-4 p-md-5">
+                  <div class="container-fluid">
+                      <h3 class="mb-4 pb-2 pb-md-0 mb-md-5 text-center">
+                        <img class="img-info-sheet-mmsu" src="/img/mmsuLogo.png" alt="">
+                        Account Registration Sheet
+                        <img class="img-info-sheet-cit" src="/img/cit_logo.png" alt="">
+                      </h3>
+                  </div>
+                  <form method="post">
+                    <div class="row">
+                      <div class="col-md-6 mb-4">
+                        <div class="form-outline">
+                          <label class="form-label" for="firstName">Username</label>
+                          <h2><%= value%></h2>
+                          <input  type="text" name="registration_username" id="firstName" class="form-control form-control-lg" value="<%= value%>" hidden required/>
+                        </div>
+      
+                      </div>
+                      <div class="col-md-6 mb-4">
+                        <div class="form-outline">
+                          <label class="form-label" for="lastName">Password</label>
+                          <input type="password" name="registration_password" id="lastName" class="form-control form-control-lg"/>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <h4>Name</h4>
+                      <div class="col-md-6 mb-4">
+                        <div class="form-outline">
+                          <input type="text" id="firstName" name="registration_firstname" class="form-control form-control-lg"/>
+                          <label class="form-label" for="firstName">First Name</label>
+                        </div>
+      
+                      </div>
+                      <div class="col-md-6 mb-4">
+                        <div class="form-outline">
+                          <input type="text" id="lastName" name="registration_lastname" class="form-control form-control-lg"/>
+                          <label class="form-label" for="lastName">Last Name</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-4">        
+                          <div class="form-outline">
+                            <input type="text" id="firstName" name="registration_middlename" class="form-control form-control-lg"/>
+                            <label class="form-label" for="firstName">Middle Name</label>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                      <h4>Birthdate</h4>
+                      <div class="col-md-6 mb-4 d-flex align-items-center">
+                        <div class="form-outline datepicker w-100">
+                          <input type="date" name="registration_birthdate" class="form-control form-control-lg" id="birthdayDate" />
+                          <label for="birthdayDate" class="form-label">Birthday</label>
+                        </div>
+                      </div>
+                      <div class="col-md-6 mb-4">
+                        <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" name="registration_gender" id="" required>
+                          <option value="Male">Male</option>
+                          <option value="Female">Female</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="row">
+                        <h4>Address</h4>
+                        <div class="col-md-6 mb-4">
+                          <div class="form-outline">
+                            <input type="text" name="registration_barangay" id="firstName" class="form-control form-control-lg" />
+                            <label class="form-label" for="firstName">Barangay</label>
+                          </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                          <div class="form-outline">
+                            <input type="text" name="registration_municipality" id="lastName" class="form-control form-control-lg" />
+                            <label class="form-label" for="lastName">Municipality</label>
+                          </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="form-outline">
+                              <input type="text" name="registration_province" id="lastName" class="form-control form-control-lg" />
+                              <label class="form-label" for="lastName">Province</label>
+                            </div>
+                          </div>
+                      </div>
+                    <div class="row">
+                      <h4>Contact</h4>
+                      <div class="col-md-6 mb-4 pb-2">
+                        <div class="form-outline">
+                          <input type="email" name="registration_email" id="emailAddress" class="form-control form-control-lg" />
+                          <label class="form-label" for="emailAddress">Email</label>
+                        </div>
+                      </div>
+                      <div class="col-md-6 mb-4 pb-2">
+                        <div class="form-outline">
+                          <input type="tel" name="registration_phonenumber" id="phoneNumber" class="form-control form-control-lg" />
+                          <label class="form-label" for="phoneNumber">Phone Number</label>
+                        </div>
+      
+                      </div>
+                    </div>
+                    <div class="mt-2 pt-2">
+                      <input class="btn btn-success btn-lg" type="submit" value="Submit" formaction="/signup" />
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    <script src="css/bootstrap/dist/js/bootstrap.js"></script>
+  </body>
+</html>

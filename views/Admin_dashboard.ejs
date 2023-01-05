@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/bootstrap/dist/css/bootstrap.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="/stylefolder/bootstrap3.js"></script>
+    <link rel="stylesheet" href="/stylefolder/admin.css">
+    <title>Admin</title>
+</head>
+<body>
+    <div class="d-flex" id="wrapper">
+        <!-- Sidebar -->
+        <div class="bg-white" id="sidebar-wrapper">
+            <div class="sidebar-heading text-center py-4 primary-text fs-4 fw-bold text-uppercase border-bottom">
+                <h6 class="fw-bold">
+                  Systematic Parking Monitoring System
+                </h6>
+            </div>
+            <div class="list-group list-group-flush my-3">
+                <a href="/admin/<%= username%>" class="list-group-item list-group-item-action bg-transparent second-text active">
+                    <img class="" src="/img/icons8-dashboard-layout-30.png" alt=""> 
+                    Dashboard</a>
+                <a href="/parkingspace/<%= username%>" <%= hidden%> class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
+                    <img class="" src="/img/icons8-parking-30.png" alt="">
+                    Parking Space
+                </a>
+                <a href="/approve/<%= username%>" <%= hidden%> class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
+                    <img class="/" src="/img/icons8-carpool-30.png" alt="">
+                    Pending Student Vehicle
+                </a>
+
+                <a href="/faculty/<%= username%>" <%= hidden%> class="list-group-item list-group-item-action bg-transparent second-text fw-bold ">
+                      <img class="" src="/img/icons8-carpool-30.png" alt=""> Pending Faculty Vehicle
+                </a>
+                <a href="/visitors/<%= username%>" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
+                  <img class="" src="/img/icons8-carpool-30.png" alt=""> Visitor Logs
+                </a>
+                <a href="/adminlist/<%= username%>" class="list-group-item list-group-item-action bg-transparent second-text fw-bold" <%= hidden%>>
+                  <img class="" src="/img/icons8-admin-settings-male-30.png" alt=""> 
+                  Admin List
+                </a>
+            </div>
+        </div>
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <nav class="navbar navbar-expand-lg navbar-light bg-transparent py-4 px-4">
+                <div class="d-flex align-items-center">
+                    <i id="menu-toggle">
+                        <img src="/img/icons8-hamburger-menu-20.png" alt="">
+                    </i>
+                    <h2 class="fs-2 m-0 p-2">Home</h2>
+                </div>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item dropdown">
+                            <a class="text-uppercase nav-link dropdown-toggle second-text fw-bold" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <%= fname%> <%= mname%> <%= lname%>
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                              <li><a class="dropdown-item" href="/adminedit/<%= username%>">Edit Profile</a></li>
+                              <li>
+                                <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                  Change Password
+                                </a>
+                              </li>
+                              <li><a class="dropdown-item text-danger" href="/logout">Log Out</a></li>
+                            </ul>
+                          </li>
+                    </ul>
+                </div>
+            </nav>
+             <!-- Modal -->
+             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Change Password</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form method="post">
+                      <div class="mb-3">
+                        <label for="recipient-name" class="col-form-label">Enter New Password</label>
+                        <input type="password" class="form-control" id="recipient-name" name="adminchangepassword" required>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="Success" class="btn btn-primary" formaction="/changepassadmin/<%= username%>">Save changes</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="container" id="refresh">
+                <div class="row g-3">
+                    <h1>Student:</h1>
+                    <div class="col-md-6">
+                      <div class="p-3 bg-white shadow-lg d-flex justify-content-around align-items-center rounded">
+                          <div>
+                              <h2>Status</h2>
+                              <h6 class="fs-4">Parked: <%= motorusers%> <br>
+                                Available Parking Space: <%= motor%></h6>
+                              <p class="fs-5">Single Motor for Student</p>
+                          </div>
+                          <i class="fs-1 primary-text border rounded-full secondary-bg p-3">
+                            <a href="/invehicle/<%= username%>/Motorcyle">
+                              <img src="/img/icons8-dirt-bike-100.png" alt="">
+                            </a>
+                          </i>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3 bg-white shadow-lg d-flex justify-content-around align-items-center rounded">
+                            <div>
+                                <h2>Status</h2>
+                                <h6 class="fs-4">Parked: <%= fourwheelin%></h6>
+                                <h6 class="fs-4">Available Parking Space: <%= fourwheeledresult%></h6>
+                                <p class="fs-5">4 Wheeled parking space for Student</p>
+                            </div>
+                            <i class="fs-1 primary-text border rounded-full secondary-bg p-3">
+                              <a href="/invehicle/<%= username%>/Four Wheeled Vehicle">
+                                <img src="/img/icons8-people-in-car-100.png" alt="">
+                              </a>
+                            </i>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                      <h1>Teacher:</h1>
+                      <div class="p-3 bg-white shadow-lg d-flex justify-content-around align-items-center rounded">
+                          <div>
+                              <h2>Status</h2>
+                              <h6 class="fs-4">Parked: <%= fourwheelinteacher%></h6>
+                              <h6 class="fs-4">Total Parking Slots: <%= ResultsTeacherfor4wheel%></h6>
+                              <p class="fs-5">4 Wheeled parking space for Teacher</p>
+                          </div>
+                          <i class="fs-1 primary-text border rounded-full secondary-bg p-3">
+                            <a href="/teacherfacultylogs/<%= username%>/FourWheeledVehicle">
+                              <img src="/img/icons8-people-in-car-100.png" alt="">
+                            </a>
+                          </i>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <h1>Teacher:</h1>
+                      <div class="p-3 bg-white shadow-lg d-flex justify-content-around align-items-center rounded">
+                        <div>
+                            <h2>Status</h2>
+                            <h6 class="fs-4">Parked: <%= facultyteacher%></h6>
+                            <h6 class="fs-4">Available Parking Space: <%= motorcycle%></h6>
+                            <p class="fs-5">Teacher and Staff Motorcycle</p>
+                        </div>
+                        <i class="fs-1 primary-text border rounded-full secondary-bg p-3">
+                          <a href="/teacherfacultylogs/<%= username%>/Motorcyle">
+                            <img src="/img/icons8-dirt-bike-100.png " alt="">
+                          </a>
+                        </i>
+                    </div>
+                    </div>
+                    <div class="col-md-6">
+                      <h1>Visitors</h1>
+                      <div class="p-3 bg-white shadow-lg d-flex justify-content-around align-items-center rounded">
+                          <div>
+                              <h2>Status</h2>
+                              <h6 class="fs-4">In: <%= visitorcounts[0].users%> </h6>
+                              <h6 class="fs-4">Total Parking Slots: <%- visitor%></h6>
+                              <p class="fs-5">Visitor Parking Space</p>
+                          </div>
+                          <i class="fs-1 primary-text border rounded-full secondary-bg p-3">
+                            <a href="/visitorslog/<%= username%>">
+                              <img src="/img/icons8-dirt-bike-100.png " alt="">
+                            </a>
+                          </i>
+                      </div>
+                    </div>
+                    <div class="row g-3">
+                      <div class="col-md-6">
+                        <div class="p-3 bg-white shadow-lg d-flex justify-content-around align-items-center rounded">
+                            <div class="container">
+                                <h3 class="text-center">Registered Student Vehicle Data</h3>
+                                <canvas id="myChart" style="width:100%;max-width:600px">
+                                </canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3 bg-white shadow-lg d-flex justify-content-around align-items-center rounded">
+                            <div class="container">
+                                <h3 class="text-center">Vehicle Type Registered by Student</h3>
+                                <canvas id="myCharts" style="width:100%;max-width:600px">
+                                </canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="p-3 bg-white shadow-lg d-flex justify-content-around align-items-center rounded">
+                          <div class="container">
+                              <h3 class="text-center">Registered Teacher Vehicle Data</h3>
+                              <canvas id="myChart3" style="width:100%;max-width:600px">
+                              </canvas>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="p-3 bg-white shadow-lg d-flex justify-content-around align-items-center rounded">
+                        <div class="container">
+                            <h3 class="text-center">Vehicle Type Registered by Teacher</h3>
+                            <canvas id="myChart4" style="width:100%;max-width:600px">
+                            </canvas>
+                        </div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /#page-content-wrapper -->
+    </div>
+    <script src="/stylefolder/bootstrap5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <script>
+        var el = document.getElementById("wrapper");
+        var toggleButton = document.getElementById("menu-toggle");
+
+        toggleButton.onclick = function () {
+            el.classList.toggle("toggled");
+        };
+        
+        $(document).ready(function(){
+        $("#myInput").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#myTable tr").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+        });
+
+    </script>
+    <script>
+        var xValues = [
+                          <% rsets.forEach((user)=>{ %> 
+                            <%- user.peryear%>,
+                          <% }) %>];
+        var yValues = [
+                          <% rsets.forEach((user)=>{ %> 
+                            <%- user.countperyear%>,
+                          <% }) %>
+                      ];
+
+        var barColors = [
+          "#006203",
+          "#0f9200",
+          "#30cb00",
+          "#4ae54a",
+          "#a4fba6"
+        ];
+        
+        new Chart("myChart", {
+          type: "doughnut",
+          data: {
+            labels: xValues,
+            datasets: [{
+              backgroundColor: barColors,
+              data: yValues
+            }]
+          },
+          options: {
+            title: {
+              display: true
+            }
+          }
+        });
+    </script>
+    <script>  
+        var xValues = [<% sqlvdescripttion.forEach((users)=>{ %> 
+                          "<%- users.vdescript%>",
+                       <% }) %>];
+        var yValues = [<% sqlvdescripttion.forEach((users)=>{ %> 
+                            <%- users.vdescount%>,
+                       <% }) %>
+                      ];
+        var barColors = [
+          "#006203",
+          "#0f9200",
+          "#30cb00"
+        ];
+        new Chart("myCharts", {
+          type: "doughnut",
+          data: {
+            labels: xValues,
+            datasets: [{
+              backgroundColor: barColors,
+              data: yValues
+            }]
+          },
+          options: {
+            title: {
+              display: true
+            }
+          }
+        });
+    </script>
+    <!--chart3-->
+    <script>
+      var xValues = [<% FacultyDateRegister.forEach((users)=>{ %> 
+                      "<%- users.peryear%>",
+                    <% }) %>];
+
+        var yValues = [<% FacultyDateRegister.forEach((users)=>{ %> 
+                            <%- users.countperyear%>,
+                      <% }) %>
+                      ];
+        var barColors = [
+          "#006203",
+          "#0f9200",
+          "#30cb00"
+        ];
+        new Chart("myChart3", {
+          type: "doughnut",
+          data: {
+            labels: xValues,
+            datasets: [{
+              backgroundColor: barColors,
+              data: yValues
+            }]
+          },
+          options: {
+            title: {
+              display: true
+            }
+          }
+        });
+    </script>
+    <!--chart4-->
+    <script>
+      var xValues = [<% FacultyDateRegisters.forEach((users)=>{ %> 
+                      "<%- users.vdescript%>",
+                    <% }) %>];
+
+        var yValues = [<% FacultyDateRegisters.forEach((users)=>{ %> 
+                            <%- users.vdescount%>,
+                      <% }) %>
+                      ];
+        var barColors = [
+          "#006203",
+          "#0f9200",
+          "#30cb00"
+        ];
+        new Chart("myChart4", {
+          type: "doughnut",
+          data: {
+            labels: xValues,
+            datasets: [{
+              backgroundColor: barColors,
+              data: yValues
+            }]
+          },
+          options: {
+            title: {
+              display: true
+            }
+          }
+        });
+    </script>
+    <script></script>
+</body>
+</html>

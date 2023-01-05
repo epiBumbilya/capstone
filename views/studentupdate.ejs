@@ -1,0 +1,309 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/stylefolder/index.css">
+    <title>Student Vehicle Registration</title>
+</head>
+<body>
+    <section class="vh-100">
+        <div class="account-sheet container py-5 h-100">
+          <div class="row justify-content-center align-items-center h-100">
+            <div class="col-12 col-lg-9 col-xl-10">
+              <div class="shadow card shadow-2-strong card-registration" style="border-radius: 15px;">
+                <div class="card-body p-4 p-md-5">
+                  <div class="container-fluid">
+                      <h3 class="mb-4 pb-2 pb-md-0 mb-md-5 text-center">
+                        <img class="img-info-sheet-mmsu" src="/img/mmsuLogo.png" alt="">
+                        Student Vehicle Registration Update
+                        <img class="img-info-sheet-cit" src="/img/cit_logo.png" alt="">
+                      </h3>
+                  </div>
+                  <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
+                      <form method="post">
+                        <div class="row">
+                          <h2 class="mb-3">Personal Information</h2>
+                          <div class="col-md-6 mb-4">
+                            <div class="form-outline">
+                              <input type="text" name="updatestudentid" value= "<%= rset[0].studentid%>"  class="form-control form-control-lg"  />
+                              <label class="form-label" for="lastName">Student Id</label>
+                            </div>
+                          </div>
+                          <%
+                              var bat = ''
+                              var cmpt = ''
+                              var cadt = ''
+                              var gt = ''
+                              var fpsm = ''
+                              var eltr= ''
+                              var extr = ''
+                              var sel = ''
+
+                              if (rset[0].major == "BAT")
+                                bat = 'SELECTED'
+
+                              else if (rset[0].major == "CMPT")
+                                cmpt = 'SELECTED'
+
+                              else if (rset[0].major == "CADT")
+                                cadt = 'SELECTED'
+
+                              else if (rset[0].major == "GT")
+                                gt = 'SELECTED'
+
+                              else if (rset[0].major == "FPSM")
+                                fpsm = 'SELECTED'
+
+                              else if (rset[0].major == "ELTR")
+                                eltr = 'SELECTED'
+
+                              else if (rset[0].major == "EXTR")
+                                extr = 'SELECTED'
+
+                              else
+                                sel = "SELECTED"
+                              
+                              
+                            %>
+
+                          <div class="col-md-6 mb-4">
+                            <select name="updatemajor" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                                <option value="-" disabled <%= sel%> > Major</option>
+                                    <option value="BAT" <%= bat%> > BAT</option>
+                                    <option value="CMPT" <%= cmpt%> > CMPT</option>
+                                    <option value="CADT" <%= cadt%> > CADT</option>
+                                    <option value="GT" <%= gt%> > GT</option>
+                                    <option value="FPSM" <%= fpsm%> > FPSM</option>
+                                    <option value="ELTR" <%= eltr%> > ELTR</option>
+                                    <option value="EXTR" <%= extr%> > EXTR</option>
+                            </select>
+                          </div>
+                          <%
+                              var year_1= ''
+                              var year_2 = ''
+                              var year_3 = ''
+                              var year_4 = ''
+                              var selyear = ''
+
+                              if (rset[0].year == "1")
+                                year_1 = 'SELECTED'
+
+                              else if (rset[0].year == "2")
+                                year_2 = 'SELECTED'
+
+                              else if (rset[0].year == "3")
+                                year_3 = 'SELECTED'
+
+                              else if (rset[0].year == "4")
+                                year_4 = 'SELECTED'
+
+                              else
+                                selyear  = "SELECTED"
+                              
+                            %>
+                          <div class="col-md-6 mb-4">
+                            <select name="updateyear" class="form-select form-select-lg mb-3"   aria-label=".form-select-lg example">
+                                <option value="-" disabled <%= selyear%> >Year</option>
+                                    <option value="1" <%= year_1%> >1</option>
+                                    <option value="2"  <%= year_2%>>2</option>
+                                    <option value="3" <%= year_3%>>3</option>
+                                    <option value="4" <%= year_4%>>4</option>
+                                </select>
+                          </div>
+                          <div class="col-md-6 mb-4">
+                            <%
+                              var section_a= ''
+                              var section_b = ''
+                              var section_c = ''
+                              var section_d = ''
+                              var selsection = ''
+
+                              if (rset[0].section == "A")
+                                section_a= 'SELECTED'
+
+                              else if (rset[0].section == "B")
+                                section_b = 'SELECTED'
+
+                              else if (rset[0].section == "C")
+                                section_c = 'SELECTED'
+
+                              else if (rset[0].section == "D")
+                                section_d = 'SELECTED'
+
+                              else
+                                selsection  = "SELECTED"
+                              
+                            %>
+                            <select name="updatesection" class="form-select form-select-lg mb-3"   aria-label=".form-select-lg example">
+                                <option selected value="-" disabled <%= selsection%>>Section</option>
+                                    <option value="A" <%= section_a%>>A</option>
+                                    <option value="B" <%= section_b%>>B</option>
+                                    <option value="C" <%= section_c%>>C</option>
+                                    <option value="D" <%= section_d%>>D</option>
+                                </select>
+                          </div>
+                          <h4>Name</h4>
+                          <div class="col-md-6 mb-4">
+                            <div class="form-outline">
+                              <input type="text" id="firstName" name="updatefirstname" value="<%= rset[0].vehicletable_fname%>"class="form-control form-control-lg" />
+                              <label class="form-label" for="firstName">First Name</label>
+                            </div>
+          
+                          </div>
+                          <div class="col-md-6 mb-4">
+                            <div class="form-outline">
+                              <input type="text" id="firstName" name="updatemiddlename" value="<%= rset[0].vehicletable_mname%>"  class="form-control form-control-lg" />
+                              <label class="form-label" for="firstName">Middle Name</label>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-4">        
+                              <div class="form-outline">
+                                <input type="text" id="lastName" name="updatelastname" value="<%= rset[0].vehicletable_lname%>" class="form-control form-control-lg" />
+                                <label class="form-label" for="lastName">Last Name</label>
+                              </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                              <%
+                              var gender_m= ''
+                              var gender_f = ''
+                              var gender_not = ''
+                              var selgender = ''
+
+                              if (rset[0].gender == "Male")
+                                gender_m= 'SELECTED'
+
+                              else if (rset[0].gender == "Female")
+                                gender_f = 'SELECTED'
+
+                              else if (rset[0].gender == "Prefered not to say")
+                                gender_not = 'SELECTED'
+
+                              else
+                                selgender  = "SELECTED"
+                              
+                            %>
+                              <select name="updategender" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                                  <option selected value="-" disabled <%= selgender%> >Gender</option>
+                                      <option value="Male"<%= gender_m%>>Male</option>
+                                      <option value="Female" <%= gender_f%>>Female</option>
+                                      <option value="Prefered not to say" <%= gender_not%>>Prefered not to say</option>
+                                  </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                          <h4>Birthdate</h4>
+                          <div class="col-md-6 mb-4 d-flex align-items-center">
+                            <div class="form-outline datepicker w-100">
+                              <input type="date" name="updatebirthdate" class="form-control form-control-lg" id="birthdayDate"/>
+                              <label for="birthdayDate" class="form-label">Birthday <%- rset[0].vehicletable_birthdate%></label>
+                            </div>
+                          </div>
+                          <div class="col-md-6 mb-4">
+                            <%
+                                var motorcyle = ''
+                                var motorcylesidecar = ''
+                                var fourwheeled = ''
+                                var selvehicle = ''
+
+                                if (rset[0].vehicletable_descript == "Motorcyle")
+                                  motorcyle= 'SELECTED'
+
+                                else if (rset[0].vehicletable_descript == "Motorcyle W/ Sidecar")
+                                  motorcylesidecar = 'SELECTED'
+
+                                else if (rset[0].vehicletable_descript == "Four Wheeled Vehicle")
+                                  fourwheeled = 'SELECTED'
+
+                                else
+                                  selvehicle = "SELECTED"
+                            
+                            %>
+                            <select name="updatetypevehicle" class="form-select form-select-lg mb-3"   aria-label=".form-select-lg example">
+                                <option selected value="-" disabled <%= selvehicle%> >Vehicle Description</option>
+                                    <option value="Motorcyle" <%= motorcyle%> >Motorcyle</option>
+                                    <option value="Four Wheeled Vehicle" <%= fourwheeled%>>Four Wheeled Vehicle</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="row">
+                            <h4>Address</h4>
+                            <div class="col-md-6 mb-4">
+                              <div class="form-outline">
+                                <input type="text" name="updatebarangay" value="<%= rset[0].vehicletable_brgy%>" id="firstName"  class="form-control form-control-lg" />
+                                <label class="form-label" for="firstName">Barangay</label>
+                              </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                              <div class="form-outline">
+                                <input type="text" name="updatemunicipality" value="<%= rset[0].vehicletable_muni%>" id="lastName"  class="form-control form-control-lg"/>
+                                <label class="form-label" for="lastName">Municipality</label>
+                              </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="form-outline">
+                                  <input type="text" name="updateprovince" value="<%= rset[0].vehicletable_prov%>" id="lastName"  class="form-control form-control-lg"/>
+                                  <label class="form-label" for="lastName">Province</label>
+                                </div>
+                              </div>
+                          </div>
+                        <div class="row">
+                          <h4>Contact</h4>
+                          <div class="col-md-6 mb-4 pb-2">
+                            <div class="form-outline">
+                              <input type="tel" name="updatephonenumber" value="<%= rset[0].vehicletable_cp%>" id="phoneNumber"   class="form-control form-control-lg" />
+                              <label class="form-label" for="phoneNumber">Phone Number</label>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <h4>Plate Number</h4>
+                          <div class="col-md-6 mb-4 pb-2">
+                            <div class="form-outline">
+                              <input type="tel" name="updateplatenumber" id="phoneNumber" value="<%= rset[0].vehicletable_platenumber%>" class="form-control form-control-lg" />
+                              <label class="form-label" for="phoneNumber">Plate Number</label>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="container p-3 text-center">
+                          <h5 class="fw-bold text-left">Present copy of the following 1 copy each to the admin to validate registration</h5>
+                          <p>Driver License</p>
+                          <p>Vehicle Registration LTO</p>
+                          <p>Vehicle OR/CR</p>
+                        </div>
+                        <div class="mt-2 pt-2">
+                          <input class="btn btn-success btn-lg" type="submit" value="Submit" formaction="/updatestudentcredentials/<%= rset[0].username%>">
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    <script src="css/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="/sweetalert2/sweetalert2.js"></script>
+    <script>
+      const message = ""
+      if ( message == "Successfully Registered" ){
+            Swal.fire(
+            'Succesfully Registered!',
+            'Please wait the approval of admin to your Registration <br><br> <h2>Thank You <h2>',
+            'success'
+            )
+      }
+    </script>
+    <script>
+
+    </script>
+  </body>
+</html>

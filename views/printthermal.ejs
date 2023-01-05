@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" href="/css/bootstrap/dist/css/bootstrap.css">
+        <link rel="stylesheet" href="style.css">
+        <title>Receipt example</title>
+    </head>
+    <style>
+        * {
+            font-size: 12px;
+        }
+
+        td,
+        th,
+        tr,
+        table {
+            border-top: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        td.description,
+        th.description {
+            width: 75px;
+            max-width: 75px;
+        }
+
+        td.quantity,
+        th.quantity {
+            width: 40px;
+            max-width: 40px;
+            word-break: break-all;
+        }
+
+        td.price,
+        th.price {
+            width: 40px;
+            max-width: 40px;
+            word-break: break-all;
+        }
+
+        .centered {
+            text-align: center;
+            align-content: center;
+        }
+        .ticket {
+            width: 175px;
+            max-width: 175px;
+        }
+        .ticket{
+            display: none;
+        }
+    @media print {
+        .hidden-print,
+        .hidden-print * {
+            display: none !important;
+        }
+        .ticket{
+            display: block;
+        }
+        .displaybig{
+            display: none;
+        }
+    }
+    </style>
+    <body>
+        <div class="ticket container" style="display: block;font-size: 12px;">
+            <p class="centered">Mariano Marcos State University<br>
+            College Of Industrial Technology</p>
+            <table style="border-top: 1px solid black;border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th class="description">Registration Id</th>
+                        <th class="price">Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="quantity">V1</td>
+                        <td class="description"><%= fname%> <%= mname%> <%= lname%></td>
+                    </tr>
+
+                </tbody>
+            </table>
+            <p class="centered">This ticket serve as you
+                <br>pass in Cit Campus<br><br>Thank You
+            </p>
+        </div>
+        <div class="container displaybig">
+            <section class="vh-100">
+                <div class="account-sheet container py-5 h-100">
+                  <div class="row justify-content-center align-items-center h-100">
+                    <div class="col-12 col-lg-9 col-xl-10">
+                      <div class="shadow card shadow-2-strong card-registration" style="border-radius: 15px;">
+                        <div class="card-body p-4 p-md-5">
+                            <div class="card-body">
+                                <h1 class="card-title text-center">MARIANO MARCOS STATE UNIVERSITY</h1>
+                                <h4 class="text-center ">COLLEGE OF INDUSTRIAL TECHNOLOGY</h4>
+                                <h4 class="card-text">NAME:<%= fname%> <%= mname%> <%= lname%></h4>
+                            </div>
+                            <button id="btnPrint" class="hidden-print btn btn-primary">
+                                <h3>Print</h3>
+                            </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+        </div>
+        <script src="script.js"></script>
+        <script>
+            const $btnPrint = document.querySelector("#btnPrint");
+            $btnPrint.addEventListener("click", () => {
+                window.print();
+            });
+        </script>
+    </body>
+</html>

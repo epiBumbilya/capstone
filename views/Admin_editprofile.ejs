@@ -1,0 +1,210 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/bootstrap/dist/css/bootstrap.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="/stylefolder/bootstrap3.js"></script>
+    <link rel="stylesheet" href="/stylefolder/admin.css">
+    <title>Admin | Edit</title>
+</head>
+<body>
+    <div class="d-flex" id="wrapper">
+        <!-- Sidebar -->
+        <div class="bg-white" id="sidebar-wrapper">
+            <div class="sidebar-heading text-center py-4 primary-text fs-4 fw-bold text-uppercase border-bottom">
+                <h6 class="fw-bold">
+                    Systematic Parking Monitoring System
+                </h6>
+            </div>
+            <div class="list-group list-group-flush my-3">
+                <a href="/admin/<%= username%>" class="list-group-item list-group-item-action bg-transparent second-text active">
+                    <img class="" src="/img/icons8-dashboard-layout-30.png" alt=""> 
+                    Dashboard</a>
+                <a href="/parkingspace/<%= username%>" <%= hidden%> class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
+                    <img class="" src="/img/icons8-parking-30.png" alt="">
+                    Parking Space
+                </a>
+                <a href="/approve/<%= username%>" <%= hidden%> class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
+                    <img class="/" src="/img/icons8-carpool-30.png" alt="">
+                    Pending Student Vehicle
+                </a>
+
+                <a href="/faculty/<%= username%>" <%= hidden%> class="list-group-item list-group-item-action bg-transparent second-text fw-bold ">
+                      <img class="" src="/img/icons8-carpool-30.png" alt=""> Pending Faculty Vehicle
+                </a>
+                <a href="/visitors/<%= username%>" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
+                    <img class="" src="/img/icons8-carpool-30.png" alt=""> Visitor Logs
+                </a>
+                <a href="/adminlist/<%= username%>" class="list-group-item list-group-item-action bg-transparent second-text fw-bold" <%= hidden%>>
+                    <img class="" src="/img/icons8-admin-settings-male-30.png" alt=""> 
+                    Admin List
+                  </a>
+            </div>
+        </div>
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <nav class="navbar navbar-expand-lg navbar-light bg-transparent py-4 px-4">
+                <div class="d-flex align-items-center">
+                    <i id="menu-toggle">
+                        <img src="/img/icons8-hamburger-menu-20.png" alt="">
+                    </i>
+                    <h2 class="fs-2 m-0 p-2">Edit Profile</h2>
+                </div>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item dropdown">
+                            <a class="text-uppercase nav-link dropdown-toggle second-text fw-bold" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <%= fname%> <%= mname%> <%= lname%>
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                              <li><a class="dropdown-item" href="/adminedit/palma">Edit Profile</a></li>
+                              <li>
+                                <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                  Change Password
+                                </a>
+                              </li>
+                              <li><a class="dropdown-item" href="/logout">Log Out</a></li>
+                            </ul>
+                          </li>
+                    </ul>
+                </div>
+            </nav>
+             <!-- Modal -->
+             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="exampleModalLabel">Change Password</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <form method="post">
+                        <div class="mb-3">
+                          <label for="recipient-name" class="col-form-label">Enter New Password</label>
+                          <input type="password" class="form-control" id="recipient-name">
+                        </div>
+                        <div class="modal-footer">
+                          <button type="Success" class="btn btn-primary">Save changes</button>
+                          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <div class="container">
+                <form method="post" class="bg-white row g-3 shadow-sm d-flex rounded my-2 mx-4">
+                        <div class="container align-items-center mt-3">
+                            <button  formaction="/adminupdate/<%= rset[0].Username%>"class="btn btn-success">
+                                Update
+                            </button>
+                            <button class="btn btn-danger">
+                                Cancel
+                            </button>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="editname" class="form-label fw-bold">Firstname</label>
+                            <input type="text" name="editfirstname" value="<%= rset[0].user_account_fname%>" id="editname"class="form-control form-control-lg" aria-label="First name">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="editname" class="form-label fw-bold ">Middlename</label>
+                            <input type="text" name="editmiddlename" value="<%= rset[0].user_account_mname%>" id="editname"class="form-control form-control-lg" aria-label="First name">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="editname" class="form-label fw-bold ">Lastname</label>
+                            <input type="text" name="editlastnmae" value="<%= rset[0].user_account_lname%>"  id="editname"class="form-control form-control-lg" aria-label="First name">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="editname" class="form-label fw-bold ">Birthdate</label>
+                            <input type="date" name="editbirthdate" id="editname"class="form-control form-control-lg" aria-label="First name">
+                        </div>
+                        <div class="col-md-6">
+
+                            <%
+                                var male = ""
+                                var female = ""
+                                var sel = ""
+                                if (rset[0].gender == "Male")
+                                    male = 'Selected'
+                                else if  (rset[0].gender == "Female")
+                                    female = 'Selected'
+                                else
+                                    sel = 'Selected'
+                            %>
+                            <label for="gender" class="form-label fw-bold ">Gender</label>
+                            <select class="form-select form-select-lg" aria-label=".form-select-lg example" name="editgender" id="gender" required>
+                              <option value="Male" <%= male%>>Male</option>
+                              <option value="Female" <%= female%>>Female</option>
+                            </select>
+                        </div>
+                        <div class="container mt-5">
+                            <h4>Address</h4>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="editname" class="form-label fw-bold">Barangay</label>
+                            <input type="text" name="editbarangay" value="<%=rset[0].barangay%>" id="editname"class="form-control form-control-lg" aria-label="First name">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="editname" class="form-label fw-bold ">Municipality</label>
+                            <input type="text" name="editmunicipality" value="<%=rset[0].city%>" class="form-control form-control-lg" aria-label="First name">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="editname" class="form-label fw-bold ">Province</label>
+                            <input type="text" name="editprovince" value="<%=rset[0].province%>" id="editname"class="form-control form-control-lg" aria-label="First name">
+                        </div>
+                        <div class="container mt-5">
+                            <h4>Contact</h4>
+                        </div>
+                        <div class="col-md-6 mb-5">
+                            <label for="editname" class="form-label fw-bold ">Email</label>
+                            <input type="email" name="editemail" value="<%=rset[0].contact_email%>" id="editname"class="form-control form-control-lg" aria-label="First name">
+                        </div>
+                        <div class="col-md-6 mb-5">
+                            <label for="editname" class="form-label fw-bold">Contact</label>
+                            <input type="tel" name="editcontact" value="<%=rset[0].contact_number%>" id="editname"class="form-control form-control-lg" aria-label="First name">
+                        </div>
+                          </div>
+
+                  </form>
+            </div>
+            </div>
+        </div>
+    </div>
+    <!-- /#page-content-wrapper -->
+    </div>
+    <script src="/stylefolder/bootstrap5.js"></script>
+    <script src="/sweetalert2/sweetalert2.js"></script>
+    <script>
+        var el = document.getElementById("wrapper");
+        var toggleButton = document.getElementById("menu-toggle");
+
+        toggleButton.onclick = function () {
+            el.classList.toggle("toggled");
+        };
+    </script>
+    <script>
+        const alert = '<%- successfuly %>'
+        if (alert == "successfuly" ){
+            Swal.fire(
+            'Succesfully Update',
+            'Your Credentials been update',
+            'success'
+            )
+        }
+    </script>
+</body>
+</html>

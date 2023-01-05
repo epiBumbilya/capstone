@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/stylefolder/index.css">
+    <script src="/stylefolder/bootstrap3.js"></script>
+    <title>Parking System</title>
+</head>
+<body>
+        <section class="login-content Form my-4 mx-5">
+            <div class="login-content container ">
+                <div class="row no-gutters">
+                    <div class="col-lg-6 text-center mt-5 content-login">
+                        <div class="login-content-h">
+                            <h1>Systematic Parking System</h1>
+                            <h3>Mariano Marcos State University</h3>
+                            <h5>College Of Industrial Technology</h5>
+                        </div>
+                    </div>
+                    <div class="shadow col-lg-5 px-5 pt-5 bg-light shadow-lg  rounded">
+                        <h4 class="fw-normal mt-3 text-success">Welcome Back!!</h4>
+                        <hr class="text-secondary">
+                        <form action="" method="post">
+                            <div class="form row">
+                                <div class="col-lg-12">
+                                    <input name="login_username" type="text" placeholder="Enter Email" class="form-control my-2">
+                                </div>
+                            </div>
+                            <div class="form row">
+                                <div class="col-lg-12">
+                                    <input name="login_password" type="password" placeholder="Enter Password" class="form-control  my-2">
+                                </div>
+                            </div>
+                            <div class="form row">
+                                <div class="col-lg-7">
+                                    <button formaction="/signin" type="submit" class="btn btn-success btn-md btn-block">Log In</button>
+                                </div>
+                            </div>
+                            <hr class="text-secondary">
+                            <div class="form-row mt-2">
+                                <p class="text-danger"><%=InvalidNotif%></p>
+                            </div>
+                            <p> Create new account as <a class="btn btn-primary" href="/accountvalidator">Admin?</a></p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section> 
+    <script src="stylefolder/bootstrap5.js"></script>
+    <script src="/sweetalert2/sweetalert2.js"></script>
+    <script>
+        const alert = '<%- sweetalertsuccess %>'
+        if (alert == "Successfully Registered" ){
+            Swal.fire(
+            'Succesfully Registered!',
+            'Please wait the approval of admin to your account <br><br> <h2>Thank You <h2>',
+            'success'
+            )
+        }else if(alert == "approval"){
+            Swal.fire(
+            'Your Aaccount is in verification',
+            'Please wait the approval of system admin <h2>',
+            'success'
+            )
+        }
+
+    </script>
+</body>
+</html>

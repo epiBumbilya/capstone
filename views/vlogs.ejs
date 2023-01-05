@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/datatables/datatables1.css">
+    <link rel="stylesheet" href="/datatables/datatables2.css">
+    <link rel="stylesheet" href="/datatables/datatables3.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="/stylefolder/bootstrap3.js"></script>
+    <link rel="stylesheet" href="/stylefolder/ticket.css">
+    <link rel="stylesheet" href="/stylefolder/admin.css">
+    <link rel="stylesheet" href="/stylefolder/admin.css">
+    <title>Admin | Visitors</title>
+</head>
+<style>
+        .tickets{
+            display: none;
+        }
+        @media print {
+        .hidden-print,
+        .hidden-print * {
+            display: none !important;
+        }
+        .tickets{
+            display: block;
+        }
+        .displaybig{
+            display: none;
+        }
+    }
+</style>
+<body>
+    <div class="tickets">
+        <div class="ticket" style="font-size: 12px;font-family: 'Times New Roman';width: 175px;max-width: 175px">
+            <p class="centered" style="text-align: center;align-content: center;font-size: 15px;">Mariano Marcos
+                <br>State University
+                <br>College Of Industrial</p>
+
+                <p class="quantity" style="font-size: 20px;">Name:<br>John Paul R.<br>Marcelo</p>
+                <p class="description" style="font-size: 20px;">Purpose:COG</p>
+            <p class="centered">Thanks for your cooperation
+                <br>This is will be gatepass for visitors</p>
+        </div>
+    </div>
+    <div class="displaybig">
+        <div class="content d-flex" id="wrapper">
+            <!-- Sidebar -->
+            <div class="bg-white" id="sidebar-wrapper">
+                <div class="sidebar-heading text-center py-4 primary-text fs-4 fw-bold text-uppercase border-bottom">
+                    <h6 class="fw-bold">
+                        Systematic Parking Monitoring System
+                    </h6>
+                </div>
+                <div class="list-group list-group-flush my-3">
+                    <a href="/admin/<%= username%>" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
+                        <img class="" src="/img/icons8-dashboard-layout-30.png" alt=""> 
+                        Dashboard</a>
+                    <a href="/parkingspace/<%= username%>" <%= hidden%> class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
+                        <img class="" src="/img/icons8-parking-30.png" alt="">
+                        Parking Space
+                    </a>
+                    <a href="/approve/<%= username%>" <%= hidden%> class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
+                        <img class="/" src="/img/icons8-carpool-30.png" alt="">
+                        Pending Student Vehicle
+                        </a>
+            
+                        <a href="/faculty/<%= username%>" <%= hidden%> class="list-group-item list-group-item-action bg-transparent second-text fw-bold ">
+                              <img class="" src="/img/icons8-carpool-30.png" alt=""> 
+                              Pending Faculty Vehicle
+                      </a>
+                    <a href="/visitors/<%= username%>" class="list-group-item list-group-item-action bg-transparent second-text fw-bold active">
+                        <img class="" src="/img/icons8-carpool-30.png" alt=""> 
+                     Visitor Logs
+                    </a>
+                    <a href="/adminlist/<%= username%>" class="list-group-item list-group-item-action bg-transparent second-text fw-bold" <%= hidden%>>
+                        <img class="" src="/img/icons8-admin-settings-male-30.png" alt=""> 
+                        Admin List
+                      </a>
+                </div>
+            </div>
+            <!-- /#sidebar-wrapper -->
+            <!-- Page Content -->
+            <div id="page-content-wrapper">
+                <nav class="navbar navbar-expand-lg navbar-light bg-transparent py-4 px-4">
+                    <div class="d-flex align-items-center">
+                        <i id="menu-toggle">
+                            <img src="/img/icons8-hamburger-menu-20.png" alt="">
+                        </i>
+                        <h2 class="fs-2 m-0 p-2">Visitor Register Sheet</h2>
+                    </div>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+    
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item dropdown">
+                                <a class="text-uppercase nav-link dropdown-toggle second-text fw-bold" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <%= fname%> <%= mname%> <%= lname%>
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                  <li><a class="dropdown-item" href="/adminedit/<%= username%>">Edit Profile</a></li>
+                                  <li>
+                                    <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                      Change Password
+                                    </a>
+                                  </li>
+                                  <li><a class="dropdown-item" href="/logout">Log Out</a></li>
+                                </ul>
+                              </li>
+                        </ul>
+                    </div>
+                </nav>
+                 <!-- Modal -->
+                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h1 class="modal-title fs-5" id="exampleModalLabel">Change Password</h1>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                          <form method="post">
+                            <div class="mb-3">
+                              <label for="recipient-name" class="col-form-label">Enter New Password</label>
+                              <input type="password" class="form-control" id="recipient-name">
+                            </div>
+                            <div class="modal-footer">
+                              <button type="Success" class="btn btn-primary">Save changes</button>
+                              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="container table-responsive">
+                    <form class="" method="post">
+                      <table id="example" class="display nowrap table table-striped" style="width:100%">
+                          <thead>
+                              <tr>
+                                  <th>Visitor Log Id</th>
+                                  <th>Parking Space</th>
+                                  <th>Name</th>
+                                  <th>Purpose</th>
+                                  <th>Gender</th>
+                                  <th>address</th>
+                                  <th>Contact No.</th>
+                                  <th>Date</th>
+                                  <th>Status</th>
+                                  <th>Action</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <% rset.forEach((user)=>{ %>
+                                  <tr>
+                                      <td class="text-uppercase"> <%= user.idvisitorslog%> </td>
+                                      <td class="text-uppercase"> <%= user.pslots%> </td>
+                                      <td class="text-uppercase"><%= user.fname%> <%= user.mname%> <%= user.lname%> </td>
+                                      <td class="text-uppercase"><%= user.purpose%></td>
+                                      <td class="text-uppercase"><%= user.gender%></td>
+                                      <td class="text-uppercase"><%= user.barangay%> <%= user.city%> <%= user.province%> </td>
+                                      <td class="text-uppercase"><%= user.contactno%></td>
+                                      <td class="text-uppercase">Time In: <%= user.tin%><br>Time Out:<%= user.tout%><br>Date:<%= user.date%></td>
+                                      <td class="text-uppercase"><%= user.status%></td>
+                                      <td data-title="Action">
+                                          <button href="" formaction="/deletevlog/<%= user.idvisitorslog%>/<%= username%>/<%= user.idpslots%>" class="btn btn-danger">
+                                                Out
+                                          </button>
+                                      </td>
+                                  </tr>
+                                <% }) %>
+                          </tbody>
+                      </table>
+                    </form>
+              </div> 
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- /#page-content-wrapper -->
+    </div>
+    <script src="/datatables/datatables1.js"></script>
+    <script src="/datatables/datatables2.js"></script>
+    <script src="/datatables/datatables3.js"></script>
+    <script src="/datatables/datatables4.js"></script>
+    <script src="/stylefolder/bootstrap5.js"></script>
+    <script src="/stylefolder/bootstrap5.js"></script>
+    <script src="/stylefolder/bootstrap5.js"></script>
+    <script src="/sweetalert2/sweetalert2.js"></script>
+    <script>
+        var el = document.getElementById("wrapper");
+        var toggleButton = document.getElementById("menu-toggle");
+
+        toggleButton.onclick = function () {
+            el.classList.toggle("toggled");
+        };
+    </script>
+    <script>
+        const alert = ''
+        if (alert == "successfuly" ){
+            Swal.fire(
+            'Succesfully Update',
+            'Your Credentials been update',
+            'success'
+            )
+        }
+    </script>
+    <script>
+           $(document).ready(function() {
+          var table = $('#example').DataTable( {
+              rowReorder: {
+                  selector: 'td:nth-child(2)'
+              },
+              responsive: true
+          } );
+      } );
+    </script>
+    <script>
+        const $btnPrint = document.querySelector("#btnPrint");
+        $btnPrint.addEventListener("click", () => {
+        window.print();
+        });
+    </script>
+</body>
+</html>

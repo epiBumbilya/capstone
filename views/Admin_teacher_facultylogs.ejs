@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/datatableswithbutton/datacss/datatables.css">
+    <link rel="stylesheet" href="/datatableswithbutton/datacss/datatables1.css">
+    <link rel="stylesheet" href="/datatableswithbutton/datacss/datatables2.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="/css/bootstrap/dist/css/bootstrap.css">
+    <script src="/stylefolder/bootstrap3.js"></script>
+    <link rel="stylesheet" href="/stylefolder/admin.css">
+    <title>Admin | Teacher Faculty Logs</title>
+</head>
+<body>
+    <div class="d-flex" id="wrapper">
+        <!-- Sidebar -->
+        <div class="bg-white" id="sidebar-wrapper">
+            <div class="sidebar-heading text-center py-4 primary-text fs-4 fw-bold text-uppercase border-bottom">
+                <h6 class="fw-bold">
+                    Systematic Parking Monitoring System
+                </h6>
+            </div>
+            <div class="list-group list-group-flush my-3">
+                <a href="/admin/<%= username%>" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
+                    <img class="" src="/img/icons8-dashboard-layout-30.png" alt=""> 
+                    Dashboard
+                </a>
+                <a href="/parkingspace/<%= username%>" <%= hidden%> class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
+                    <img class="" src="/img/icons8-parking-30.png" alt="">
+                    Parking Space
+                </a>
+                <a href="/approve/<%= username%>" <%= hidden%> class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
+                    <img class="/" src="/img/icons8-carpool-30.png" alt="">
+                    Pending Student Vehicle
+                </a>
+        
+                <a href="/faculty/<%= username%>" <%= hidden%> class="list-group-item list-group-item-action bg-transparent second-text fw-bold ">
+                          <img class="" src="/img/icons8-carpool-30.png" alt=""> 
+                          Pending Faculty Vehicle
+                </a>
+                <a href="/visitors/<%= username%>" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
+                    <img class="" src="/img/icons8-carpool-30.png" alt=""> Visitor Logs
+                </a>
+                <a href="/adminlist/<%= username%>" class="list-group-item list-group-item-action bg-transparent second-text fw-bold" <%= hidden%>>
+                    <img class="" src="/img/icons8-admin-settings-male-30.png" alt=""> 
+                    Admin List
+                  </a>
+            </div>
+        </div>
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <nav class="navbar navbar-expand-lg navbar-light bg-transparent py-4 px-4">
+                <div class="d-flex align-items-center">
+                    <i id="menu-toggle">
+                        <img src="/img/icons8-hamburger-menu-20.png" alt="">
+                    </i>
+                    <h2 class="fs-2 m-0 p-2">Teacher Faculty Vehicle</h2>
+                </div>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon">
+                    </span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item dropdown">
+                            <a class="text-uppercase nav-link dropdown-toggle second-text fw-bold" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <%= fname%> <%= mname%> <%= lname%>
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                              <li><a class="dropdown-item" href="/adminedit/<%= username%>">Edit Profile</a></li>
+                              <li>
+                                <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                  Change Password
+                                </a>
+                              </li>
+                              <li><a class="dropdown-item text-danger" href="/logout">Log Out</a></li>
+                            </ul>
+                          </li>
+                    </ul>
+                </div>
+
+            </nav>
+             <!-- Modal -->
+             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Change Password</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form method="post">
+                      <div class="mb-3">
+                        <label for="recipient-name" class="col-form-label">Enter New Password</label>
+                        <input type="password" class="form-control" id="recipient-name" name="adminchangepassword" required>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="Success" class="btn btn-primary" formaction="/changepassadmin/<%= username%>">Save changes</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="container table-responsive">
+                <a class="mb-2 btn btn-success" href="/adminarchive/<%= username%>">
+                    View Parked Vehicle Archive <img src="/img/icons8-archive-folder-20.png" alt="">
+                  </a>
+                  <form class="mt-2" method="post">
+                    <table id="example" class="display nowrap table table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Platenumber</th>
+                                <th>Vehicle Description</th>
+                                <th>Parking Slots</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% rset.forEach((user)=>{ %>
+                                <tr>
+                                    <td class="text-uppercase"><%= user.platenumber%></td>
+                                    <td class="text-uppercase"><%= user.vehicledescription%></td>
+                                    <%if (user.vehicledescription == 'Motorcyle'){%>
+                                        <%if (user.InOutLogs == 'Out') {%>
+                                            <td>               
+                                                <select class="form-select" id="slot" name='parkingslot'>
+                                                  <% parkingslotsresult.forEach((slot)=>{%>
+                                                    <option value="<%= slot.idparkingslots%>">
+                                                      Parking Space No. <%= slot.pakingnumber%>
+                                                    </option>
+                                                  <% }) %>
+                                                </select>
+                                            </td>
+                                        <%}else{%>
+                                            <td>
+                                                    <h4><span class="text-danger">TSP</span> - <%= user.pslots%><h4> 
+                                            </td>
+                                        <%}%>
+                                    <%}else{%>
+                                        <%if (user.InOutLogs == 'Out') {%>
+                                            <td>               
+                                                <select class="form-select" id="slot" name='parkingslot'>
+                                                  <% parkingslotsresult.forEach((slot)=>{%>
+                                                    <option value="<%= slot.idparkingslots%>">
+                                                      Parking Space No. <%= slot.pakingnumber%>
+                                                    </option>
+                                                  <% }) %>
+                                                </select>
+                                            </td>
+                                        <%}else{%>
+                                            <td>
+                                                    <h4><span class="text-primary">TP</span> - <%= user.pslots%><h4> 
+                                            </td>
+                                        <%}%>
+                                    <%}%>
+                                    <td class="text-uppercase"><%= user.InOutLogs%></td>
+                                    <td data-title="Action">
+                                        <a onclick="teacherins('<%= user.regisrationid%>','<%= username%>','<%= user.vehicledescription%>','<%= user.platenumber%>')" class="btn btn-success">
+                                            In
+                                        </a>
+                                        <button formaction="/teacherout/<%= user.regisrationid%>/<%= username%>/<%=user.idparkingslots%>/<%= user.vehicledescription%>" class="btn btn-danger">
+                                            Out
+                                        </button>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModals<%= user.regisrationid%>">
+                                            View Details
+                                        </button>
+                                          <div class="container">
+                                              <!-- Modal -->
+                                              <div class="modal fade" id="exampleModals<%= user.regisrationid%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                  <div class="modal-content">
+                                                    <div class="modal-header">
+                                                      <h1 class="modal-title fs-5" id="exampleModalLabel">Details</h1>
+                                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                      <span class="fw-bold">Name: <br/></span><%= user.fname%> <%= user.mname%> <%= user.lname%><br/>
+                                                      <span class="fw-bold">Address: <br/></span><%= user.barangay%> <%= user.municipality%> <%= user.province%><br/>
+                                                      <span class="fw-bold">Contact: <br/></span><%= user.contact%><br/>
+                                                      <span class="fw-bold">Vehicle Description: <br/></span> <%= user.vehicledescription%><br/>Plate Number: <%= user.platenumber%>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                      <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                          </div>
+                                    </td>
+                                </tr>
+                              <% }) %>
+                        </tbody>
+                    </table>
+                  </form>
+            </div>
+        </div>
+    </div>
+    <!-- /#page-content-wrapper -->
+    </div>
+    <script src="/datatableswithbutton/datajs/datatables1.js"></script>
+    <script src="/datatableswithbutton/datajs/datatables2.js"></script>
+    <script src="/datatableswithbutton/datajs/datatables3.js"></script>
+    <script src="/datatableswithbutton/datajs/datatables4.js"></script>
+    <script src="/datatableswithbutton/datajs/datatables5.js"></script>
+    <script src="/datatableswithbutton/datajs/datatables6.js"></script>
+    <script src="/datatableswithbutton/datajs/datatables7.js"></script>
+    <script src="/datatableswithbutton/datajs/datatables8.js"></script>
+    <script src="/datatableswithbutton/datajs/datatables9.js"></script>
+    <script src="/stylefolder/bootstrap5.js"></script>
+    <script src="/sweetalert2/sweetalert2.js"></script>
+    <script>
+        function teacherins(rid,username,vdescript,plateno){
+        // Get the select element
+        var select = document.getElementById('slot');
+
+        // Get the selected option element
+        var selectedOption = select.options[select.selectedIndex];
+
+        // Get the value of the selected option
+        var value = selectedOption.value;
+        Swal.fire({
+        title: 'Are you sure you want to allow enter Plate Number? \n'+plateno,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: 'green',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, Allow it!'
+        }).then((result) => {
+        if (result.isConfirmed) {
+            location.href="/teacherin/"+rid+"/"+username+"/"+vdescript+"/"+plateno+'/'+value
+        }
+        })
+      }
+    </script>
+    <script>
+        var el = document.getElementById("wrapper");
+        var toggleButton = document.getElementById("menu-toggle");
+
+        toggleButton.onclick = function () {
+            el.classList.toggle("toggled");
+        };
+        
+        $(document).ready(function(){
+        $("#myInput").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#myTable tr").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+        });
+    </script>
+    <script>
+      $(document).ready(function() {
+          var table = $('#example').DataTable( {
+              rowReorder: {
+                  selector: 'td:nth-child(2)'
+              },
+              responsive: true
+          } );
+      } );
+    </script>
+    <script>
+        const alert = '<%- alert %>'
+        const plateno = '<%- plateno %>'
+        if (alert == "In" ){
+            Swal.fire(
+            'Succesfuly Enter',
+            '<h4>With the Plate Number:</h4><br> <h3>'+plateno+'</h3>',
+            'success'
+            )
+        }
+        else if (alert == "noparking" ){
+            Swal.fire(
+            'No Parking Available!',
+            'Failed to park',
+            'error'
+            )
+        }
+        else if (alert == "alreadylogout" ){
+            Swal.fire(
+            'Already out',
+            'This platenumber is already  out '+plateno,
+            'error'
+            )
+        }
+        
+    </script>
+</body>
+</html>

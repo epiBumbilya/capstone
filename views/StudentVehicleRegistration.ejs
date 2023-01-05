@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/stylefolder/index.css">
+    <title>Student Vehicle Registration</title>
+</head>
+<style>
+  .img{
+      width: 40px;
+      height: auto;
+  }
+  .cit{
+      width: 40px;
+      height: auto;
+  }
+</style>
+<body>
+    <nav class="navbar fixed-top navbar-expand-sm navbar-dark bg-success shadow mb-5">
+        <div class="container">
+        <a 
+        href="#" 
+        class="navbar-brand mb-0 h1">
+            <span><img class="img" src="/img/mmsuLogo.png"alt=""><img class="cit" src="/img/cit_logo.png"alt=""></span> Systematic Parking System
+        </a>
+        <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+        </button>
+          <div class="collapse navbar-collapse ms-auto" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item active">
+                    <a href="/Studentregistrationsheet" class="nav-link active">
+                        Registration
+                    </a>
+                </li>
+                <li class="nav-item active">
+                    <a href="/studentlogin" class="nav-link">
+                        Login
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <section class="vh-100">
+        <div class="account-sheet container py-5 h-100">
+          <div class="row justify-content-center align-items-center h-100">
+            <div class="col-12 col-lg-9 col-xl-10">
+              <div class="shadow card shadow-2-strong card-registration" style="border-radius: 15px;">
+                <div class="card-body p-4 p-md-5">
+                  <div class="container-fluid">
+                      <h3 class="mb-4 pb-2 pb-md-0 mb-md-5 text-center">
+                        <img class="img-info-sheet-mmsu" src="/img/mmsuLogo.png" alt="">
+                        Vehicle Registration Sheet
+                        <img class="img-info-sheet-cit" src="/img/cit_logo.png" alt="">
+                      </h3>
+                  </div>
+
+                  <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
+                      <form method="post">
+                        <div class="row">
+                          <h2 class="mb-3">Personal Information</h2>
+                          <div class="col-md-6 mb-4">
+                            <div class="form-outline">
+                              <label class="form-label" for="firstName">Set your username this if your yearly Vehicle Registration Update</label>
+                              <h2><%= value%></h2>
+                              <input type="text" id="firstName" placeholder="Username" name="vehicleregistration_username" value="<%= value%>" required class="form-control form-control-lg" <%= hiddenusername%>/>
+                              <p class="mt-2 text-danger"><%=  errormessage%></p>
+                              <p class="mt-2 text-success"><%=  acceptmessage%></p>
+                              <button class="btn btn-success mt-2" formaction="/validate-username">
+                                Check Username
+                                <img src="/img/icons8-checkmark-15.png" alt="">
+                              </button>
+                            </div>
+                          </div>
+                          <div class="col-md-6 mb-4">
+                            <div class="form-outline">
+                              <label class="form-label" for="firstName">
+                                Set your password this if your yearly Vehicle Registration Update
+                              </label>
+                                <input type="password" id="firstName" placeholder="Password" name="vehicleregistration_password" required class="mt-2 form-control form-control-lg" <%= disabled%>/>
+                            </div>
+                          </div>
+                          <div class="col-md-6 mb-4">
+                            <div class="form-outline">
+                              <input type="text" name="vehicleregistration_studentid" id="lastName" required  class="form-control form-control-lg" <%= disabled%> />
+                              <label class="form-label" for="lastName">Student Id</label>
+                            </div>
+                          </div>
+                          <div class="col-md-6 mb-4">
+                            <select name="vehicleregistration_major" class="form-select form-select-lg mb-3" required  aria-label=".form-select-lg example" <%= disabled%> >
+                                <option selected>Major</option>
+                                    <option value="BAT">BAT</option>
+                                    <option value="CMPT">CMPT</option>
+                                    <option value="CADT">CADT</option>
+                                    <option value="GT">GT</option>
+                                    <option value="FPSM">FPSM</option>
+                                    <option value="ELTR">ELTR</option>
+                                    <option value="EXTR">EXTR</option>
+                            </select>
+                          </div>
+                          <div class="col-md-6 mb-4">
+                            <select name="vehicleregistration_year" class="form-select form-select-lg mb-3" required  aria-label=".form-select-lg example" <%= disabled%> >
+                                <option selected>Year</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                </select>
+                          </div>
+                          <div class="col-md-6 mb-4">
+                            <select name="vehicleregistration_section" class="form-select form-select-lg mb-3" required  aria-label=".form-select-lg example" <%= disabled%> >
+                                <option selected>Section</option>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                </select>
+                          </div>
+                          <h4>Name</h4>
+                          <div class="col-md-6 mb-4">
+                            <div class="form-outline">
+                              <input type="text" id="firstName" name="vehicleregistration_firstname" required  class="form-control form-control-lg" <%= disabled%> />
+                              <label class="form-label" for="firstName">First Name</label>
+                            </div>
+          
+                          </div>
+                          <div class="col-md-6 mb-4">
+                            <div class="form-outline">
+                              <input type="text" id="firstName" name="vehicleregistration_middlename" required  class="form-control form-control-lg" <%= disabled%> />
+                              <label class="form-label" for="firstName">Middle Name</label>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-4">        
+                              <div class="form-outline">
+                                <input type="text" id="lastName" name="vehicleregistration_lastname" required  class="form-control form-control-lg" <%= disabled%> />
+                                <label class="form-label" for="lastName">Last Name</label>
+                              </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                              <select name="vehicleregistration_gender" class="form-select form-select-lg mb-3" required  aria-label=".form-select-lg example" <%= disabled%> >
+                                  <option selected>Gender</option>
+                                      <option value="Male">Male</option>
+                                      <option value="Female">Female</option>
+                                      <option value="Prefered not to say">Prefered not to say</option>
+                                  </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                          <h4>Birthdate</h4>
+                          <div class="col-md-6 mb-4 d-flex align-items-center">
+                            <div class="form-outline datepicker w-100">
+                              <input type="date" name="vehicleregistration_birthdate" required  class="form-control form-control-lg" id="birthdayDate" <%= disabled%> />
+                              <label for="birthdayDate" class="form-label">Birthday</label>
+                            </div>
+                          </div>
+                          <div class="col-md-6 mb-4">
+                            <select name="vehicleregistration_typevehicle" class="form-select form-select-lg mb-3" required  aria-label=".form-select-lg example" <%= disabled%> >
+                                <option selected>Vehicle Description</option>
+                                    <option value="Motorcyle">Motorcyle</option>
+                                    <option value="Four Wheeled Vehicle">Four Wheeled Vehicle</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="row">
+                            <h4>Address</h4>
+                            <div class="col-md-6 mb-4">
+                              <div class="form-outline">
+                                <input type="text" name="vehicleregistration_barangay" id="firstName" required  class="form-control form-control-lg" <%= disabled%> />
+                                <label class="form-label" for="firstName">Barangay</label>
+                              </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                              <div class="form-outline">
+                                <input type="text" name="vehicleregistration_municipality" id="lastName" required  class="form-control form-control-lg" <%= disabled%> />
+                                <label class="form-label" for="lastName">Municipality</label>
+                              </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="form-outline">
+                                  <input type="text" name="vehicleregistration_province" id="lastName" required  class="form-control form-control-lg"<%= disabled%> />
+                                  <label class="form-label" for="lastName">Province</label>
+                                </div>
+                              </div>
+                          </div>
+                        <div class="row">
+                          <h4>Contact</h4>
+                          <div class="col-md-6 mb-4 pb-2">
+                            <div class="form-outline">
+                              <input type="tel" name="vehicleregistration_phonenumber" id="phoneNumber" required   class="form-control form-control-lg" <%= disabled%> />
+                              <label class="form-label" for="phoneNumber">Phone Number</label>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <h4>Plate Number</h4>
+                          <div class="col-md-6 mb-4 pb-2">
+                            <div class="form-outline">
+                              <input type="tel" name="vehicleregistration_platenumber" id="phoneNumber" required  class="form-control form-control-lg" <%= disabled%> />
+                              <label class="form-label" for="phoneNumber">Plate Number</label>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="container p-3 text-center">
+                          <h5 class="fw-bold text-left">Present copy of the following 1 copy each to the admin to validate registration</h5>
+                          <p>Driver License</p>
+                          <p>Vehicle Registration LTO</p>
+                          <p>Vehicle OR/CR</p>
+                        </div>
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal" <%= hidden %>>
+                          Submit
+                        </button>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Data Privacy Act.</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                              <p>By submitting this form, you agree to the collection and processing of your personal data in accordance with the policies of the Mariano Marcos State University.  This consent does not preclude the existence of other criteria for lawful processing of personal data and does not waive any rights under the Data Privacy Act of 2012 and other applicable laws.</p>
+                              <br><br>
+                              <p>I undertake to abide the lawful processing of personal data as mandated by the provisions of the Data Privacy Act of 2012, its implementing rules and regulations as well as the policies of the Mariano Marcos State University (MMSU) and the Accrediting Agency of Chartered Colleges and Universities in the Philippines (AACCUP).</p>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <input class="btn btn-success rounded" type="submit" value="I agree and Submit" formaction="/carregister">
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    <script src="css/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="/sweetalert2/sweetalert2.js"></script>
+    <script>
+      const message = "<%= message%>"
+      if ( message == "Successfully Registered" ){
+            Swal.fire(
+            'Succesfully Registered!',
+            'Please wait the approval of admin to your Registration <br><br> <h2>Thank You <h2>',
+            'success'
+            )
+      }
+    </script>
+    <script>
+
+    </script>
+  </body>
+</html>

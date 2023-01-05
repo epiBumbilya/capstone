@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/stylefolder/index.css">
+    <link rel="stylesheet" href="/stylefolder/admin.css">
+    <title>Vehicle Registrations</title>
+</head>
+
+<body>
+    <section class="vh-100">
+        <div class="account-sheet container py-5 h-100">
+          <div class="row justify-content-center align-items-center h-100">
+            <div class="col-12 col-lg-9 col-xl-10">
+              <div class="shadow card shadow-2-strong card-registration" style="border-radius: 15px;">
+                <div class="card-body p-4 p-md-5">
+                  <div class="container-fluid">
+                      <h3 class="mb-4 pb-2 pb-md-0 mb-md-5 text-center">
+                        <img class="img-info-sheet-mmsu" src="/img/mmsuLogo.png" alt="">
+                        Vehicle Registration Sheet
+                        <img class="img-info-sheet-cit" src="/img/cit_logo.png" alt="">
+                      </h3>
+                  </div>
+                  <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
+                      <form method="post">
+                        <div class="row">
+                          <h2 class="mb-3">Personal Information</h2>
+                          <h4>Name</h4>
+                          <div class="col-md-6 mb-4">
+                            <div class="form-outline">
+                              <input type="text" id="firstName" value="<%= rset[0].fname%>" name="fname" class="form-control form-control-lg"/>
+                              <label class="form-label" for="firstName">First Name</label>
+                            </div>
+          
+                          </div>
+                          <div class="col-md-6 mb-4">
+                            <div class="form-outline">
+                              <input type="text" id="firstName" value="<%= rset[0].mname%> "name="mname" class="form-control form-control-lg" />
+                              <label class="form-label" for="firstName">Middle Name</label>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-4">        
+                              <div class="form-outline">
+                                <input type="text" id="lastName" value="<%= rset[0].lname%>" name="lname" class="form-control form-control-lg" />
+                                <label class="form-label" for="lastName">Last Name</label>
+                              </div>
+                            </div>
+                            <input name='username'value="<%= rset[0].Username%>" hidden>
+                            <%
+                              var fac_f = ""
+                              var fac_t = ""
+                              var fac_sel = ""
+
+                              if(rset[0].usertypes == 'Teacher')
+                                fac_t = 'SELECTED'
+                              else if(rset[0].usertypes == 'Faculty')
+                                fac_f = 'SELECTED'
+                              else
+                                fac_sel = 'SELECTED'
+                            %>
+                            <div class="col-md-6 mb-4">
+                              <select name="teacherfaculty"  class="form-select form-select-lg mb-3" aria-label=".form-select-lg example"  >
+                                  <option selected  <%= fac_sel%>>Status</option>
+                                      <option value="Teacher" <%= fac_t%>>Teacher</option>
+                                      <option value="Faculty" <%= fac_f%>>Faculty</option>
+                                  </select>
+                            </div>
+                            <%
+                              var gender_m = ""
+                              var gender_f = ""
+                              var gender_p = ""
+                              var gender_sel = ""
+                              if(rset[0].gender == 'Male')
+                                gender_m = 'SELECTED'
+                              else if(rset[0].gender == 'Female')
+                                gender_f = 'SELECTED'
+                              else if(rset[0].gender == 'Prefered not to say')
+                                gender_p = 'SELECTED'
+                              else
+                                  gender_sel = 'SELECTED'
+                            %>
+                            <div class="col-md-6 mb-4">
+                              <select name="gender"class="form-select form-select-lg mb-3" aria-label=".form-select-lg example"  >
+                                  <option selected <%= gender_sel%>>Gender</option>
+                                      <option value="Male"<%= gender_m%>>Male</option>
+                                      <option value="Female" <%= gender_f%>>Female</option>
+                                      <option value="Prefered not to say"<%= gender_p%>>Prefered not to say</option>
+                                  </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                          <h4>Birthdate</h4>
+                          <div class="col-md-6 mb-4 d-flex align-items-center">
+                            <div class="form-outline datepicker w-100">
+                              <input type="date" name="birthdate" class="form-control form-control-lg" id="birthdayDate"  />
+                              <label for="birthdayDate" class="form-label">Birthday</label>
+                            </div>
+                          </div>
+                          <%
+                            var motor_m = ""
+                            var motor_w = ""
+                            var motor_sel = ""
+                            if(rset[0].vehicledescription == 'Motorcyle')
+                              motor_m = 'SELECTED'
+                            else if(rset[0].vehicledescription == 'FourWheeledVehicle')
+                              motor_w = 'SELECTED'
+                            else
+                              motor_sel = 'SELECTED'
+                          %>
+                          <div class="col-md-6 mb-4">
+                            <select name="typevehicle" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                                <option selected <%= motor_sel%>>Vehicle Description</option>
+                                    <option value="Motorcyle" <%= motor_m%>>Motorcyle</option>
+                                    <option value="FourWheeledVehicle" <%= motor_w%>>Four Wheeled Vehicle</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="row">
+                            <h4>Address</h4>
+                            <div class="col-md-6 mb-4">
+                              <div class="form-outline">
+                                <input type="text" name="barangay" id="firstName" value="<%=rset[0].barangay%>" class="form-control form-control-lg" />
+                                <label class="form-label" for="firstName">Barangay</label>
+                              </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                              <div class="form-outline">
+                                <input type="text" name="municipality" id="lastName" value="<%=rset[0].municipality%>" class="form-control form-control-lg"  />
+                                <label class="form-label" for="lastName">Municipality</label>
+                              </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="form-outline">
+                                  <input type="text" name="province" id="lastName" value="<%=rset[0].province%>"  class="form-control form-control-lg" />
+                                  <label class="form-label" for="lastName">Province</label>
+                                </div>
+                              </div>
+                          </div>
+                        <div class="row">
+                          <h4>Contact</h4>
+                          <div class="col-md-6 mb-4 pb-2">
+                            <div class="form-outline">
+                              <input type="number" name="phonenumber" id="phoneNumber" value="<%=rset[0].contact%>" class="form-control form-control-lg"  />
+                              <label class="form-label" for="phoneNumber">Phone Number</label>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <h4>Plate Number</h4>
+                          <div class="col-md-6 mb-4 pb-2">
+                            <div class="form-outline">
+                              <input type="text" name="platenumber" id="phoneNumber" value="<%=rset[0].platenumber%>" class="form-control form-control-lg"  />
+                              <label class="form-label" for="phoneNumber">Plate Number</label>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="mt-2 pt-2">
+                          <input class="btn btn-success btn-lg" type="submit" value="Submit" formaction="/updatefacultyreg">
+                        </div>
+                      </form> 
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    <script src="css/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="/sweetalert2/sweetalert2.js"></script>
+    <script>
+      const message = ""
+      if ( message == "Successfully Registered" ){
+            Swal.fire(
+            'Succesfully Registered!',
+            'Please wait the approval of admin to your Registration <br><br> <h2>Thank You <h2>',
+            'success'
+            )
+      }
+    </script>
+    <script>
+
+    </script>
+  </body>
+</html>
